@@ -1,0 +1,140 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  --font-sans: "Aptos", "Segoe UI", "Helvetica Neue", sans-serif;
+  --font-display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia,
+    serif;
+  --color-bg: #060816;
+  --color-panel: rgba(12, 18, 37, 0.76);
+  --color-panel-strong: rgba(15, 23, 47, 0.92);
+  --color-muted-panel: rgba(18, 25, 49, 0.82);
+  --color-text: #eef2ff;
+  --color-muted: #aab5da;
+  --color-accent: #8fb5ff;
+  --color-accent-secondary: #51e0cb;
+  --color-line: rgba(156, 180, 255, 0.18);
+  --shadow-soft: 0 24px 90px rgba(5, 12, 32, 0.42);
+  --radius-panel: 1.75rem;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    border-color: var(--color-line);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    background:
+      radial-gradient(circle at top, rgba(108, 165, 255, 0.15), transparent 28rem),
+      radial-gradient(circle at 80% 20%, rgba(81, 224, 203, 0.12), transparent 22rem),
+      linear-gradient(180deg, #091022 0%, #060816 52%, #050713 100%);
+    color: var(--color-text);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  ::selection {
+    background: rgba(143, 181, 255, 0.3);
+    color: white;
+  }
+}
+
+@layer utilities {
+  .surface {
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: var(--radius-panel);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015)),
+      var(--color-panel);
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(18px);
+  }
+
+  .surface-muted {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: calc(var(--radius-panel) - 0.2rem);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.015)),
+      var(--color-muted-panel);
+    box-shadow: 0 20px 60px rgba(7, 12, 28, 0.28);
+    backdrop-filter: blur(16px);
+  }
+
+  .section-eyebrow {
+    color: var(--color-accent);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .react-flow {
+    --xy-background-color-default: transparent;
+    --xy-controls-button-background-color-default: rgba(14, 20, 38, 0.88);
+    --xy-controls-button-background-color-hover-default: rgba(24, 32, 56, 0.96);
+    --xy-controls-button-color-default: #eef2ff;
+    --xy-controls-button-border-color-default: rgba(255, 255, 255, 0.1);
+    --xy-controls-box-shadow-default: 0 18px 40px rgba(5, 10, 24, 0.34);
+    --xy-edge-stroke-default: rgba(255, 255, 255, 0.18);
+    --xy-edge-stroke-width-default: 1.2;
+    --xy-node-boxshadow-hover-default: none;
+    --xy-node-boxshadow-selected-default: none;
+  }
+
+  .react-flow__controls {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1rem;
+    overflow: hidden;
+    background: rgba(9, 13, 26, 0.76);
+    backdrop-filter: blur(12px);
+  }
+
+  .react-flow__controls-button {
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .react-flow__edge-path,
+  .react-flow__edge.animated path {
+    transition:
+      stroke 220ms ease,
+      stroke-width 220ms ease,
+      opacity 220ms ease;
+  }
+
+  .react-flow__node {
+    transition:
+      opacity 220ms ease,
+      transform 220ms ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .react-flow__edge-path,
+    .react-flow__edge.animated path,
+    .react-flow__node {
+      transition: none;
+    }
+  }
+
+  .react-flow__attribution {
+    border-radius: 0.8rem 0 0 0;
+    background: rgba(10, 14, 28, 0.75);
+    color: var(--color-muted);
+    backdrop-filter: blur(10px);
+  }
+}
