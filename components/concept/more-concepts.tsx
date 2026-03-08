@@ -15,7 +15,7 @@ export function MoreConcepts({ currentHref }: MoreConceptsProps) {
       <SectionHeading
         eyebrow="Continue exploring"
         title="Stay inside the library."
-        description="Each concept keeps the same calm shell, but the mechanism and stage story change to fit the system."
+        description="Each concept keeps the same calm 3D pipeline shell, but the mechanism and stage story change to fit the system."
       />
       <div className="grid gap-4 lg:grid-cols-3">
         {entries.map((entry) => (

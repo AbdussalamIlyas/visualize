@@ -6,7 +6,7 @@ import { solarPanelConcept } from "@/data/how-solar-panels-work";
 export const metadata: Metadata = {
   title: "How Solar Panels Work",
   description:
-    "Step through how sunlight becomes separated charge, direct current, and usable AC power.",
+    "Step through a 3D guided pipeline for how sunlight becomes separated charge, direct current, and usable AC power.",
 };
 
 export default function HowSolarPanelsWorkPage() {

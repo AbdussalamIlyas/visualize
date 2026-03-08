@@ -193,13 +193,14 @@ const stages: Stage[] = [
 export const webPageExplainer = {
   id: "web-page-pipeline",
   type: "pipeline",
+  sceneVariant: "web-page",
   title: "Browser-to-page walkthrough",
   summary:
     "Follow one page request from URL and DNS to the server response and the browser render path.",
   intro:
     "Use this guided view first. Each stage shows which part of the page load changed and why the result appears on screen.",
   defaultStageId: stages[0].id,
-  heroKicker: "Guided pipeline",
+  heroKicker: "3D guided pipeline",
   heroTitle: "Watch the web turn a URL into pixels.",
   heroSummary:
     "The browser names the destination, asks the network, receives files, and then does the work of rendering the page.",

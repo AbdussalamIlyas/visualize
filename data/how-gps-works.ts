@@ -153,13 +153,14 @@ const stages: Stage[] = [
 export const gpsExplainer = {
   id: "gps-pipeline",
   type: "pipeline",
+  sceneVariant: "gps",
   title: "Signal-to-position walkthrough",
   summary:
     "Follow how timed satellite signals become ranges, then a best-fit location on the map.",
   intro:
     "Use this guided view first. Each stage turns timing data into a tighter geometric answer about where the receiver can be.",
   defaultStageId: stages[0].id,
-  heroKicker: "Guided pipeline",
+  heroKicker: "3D guided pipeline",
   heroTitle: "Watch GPS turn timing into location.",
   heroSummary:
     "The receiver listens, measures delays, solves for distance and clock bias, then estimates where you are.",

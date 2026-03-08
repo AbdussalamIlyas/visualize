@@ -5,9 +5,10 @@ import { motion } from "motion/react";
 import { Container } from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/link-button";
 import { Pill } from "@/components/ui/pill";
+import { conceptGalleryEntries } from "@/data/concept-gallery";
 
 const principles = [
-  "One concept per page",
+  "One guided pipeline shell",
   "The visual teaches first",
   "Details stay collapsed",
 ];
@@ -26,16 +27,17 @@ export function AboutPage() {
             <div className="space-y-4">
               <Pill tone="accent">About Visualize</Pill>
               <h1 className="max-w-4xl font-[family:var(--font-display)] text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
-                Visual explainers, not essay pages.
+                Guided pipelines, not essay pages.
               </h1>
               <p className="max-w-2xl text-lg leading-8 text-[var(--color-muted)]">
-                Each concept gets one interactive page, compact cues, and
+                Each concept shares the same minimalist 3D interaction model:
+                clear stage progression, a visual-first center surface, and
                 collapsible reference material.
               </p>
             </div>
             <div className="surface-muted flex flex-wrap gap-2 p-6">
-              <Pill>1 flagship</Pill>
-              <Pill>2 starters</Pill>
+              <Pill>{`${conceptGalleryEntries.length} guided pipelines`}</Pill>
+              <Pill>Minimal navigation</Pill>
               <Pill>Glossary + sources</Pill>
             </div>
           </div>
@@ -65,12 +67,10 @@ export function AboutPage() {
           <div className="space-y-2">
             <Pill>Audience</Pill>
             <p className="text-2xl font-semibold text-white">
-              For learners who want the mechanism first.
+              For learners who want the mechanism first and the interface to stay out of the way.
             </p>
           </div>
-          <LinkButton href="/concept/how-a-jet-engine-works">
-            Open the jet engine explainer
-          </LinkButton>
+          <LinkButton href="/#concept-library">Browse the concept library</LinkButton>
         </section>
       </Container>
     </div>

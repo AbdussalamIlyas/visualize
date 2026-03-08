@@ -5,7 +5,7 @@ import { JetEnginePage } from "@/components/jet-engine/jet-engine-page";
 export const metadata: Metadata = {
   title: "How a Jet Engine Works",
   description:
-    "Explore a one-page interactive turbofan explainer from intake and compression to combustion, turbine power, and exhaust thrust.",
+    "Explore a 3D guided pipeline for intake, compression, combustion, turbine power recovery, and exhaust thrust.",
 };
 
 export default function HowAJetEngineWorksPage() {

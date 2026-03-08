@@ -5,10 +5,7 @@ import { usePathname } from "next/navigation";
 
 import { Container } from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/link-button";
-import {
-  conceptGalleryEntries,
-  featuredConceptEntry,
-} from "@/data/concept-gallery";
+import { conceptGalleryEntries } from "@/data/concept-gallery";
 import { cx } from "@/lib/utils";
 
 const navigation = [
@@ -61,8 +58,8 @@ export function SiteHeader() {
           <div className="hidden rounded-full border border-white/10 bg-white/[0.03] px-3 py-2 text-xs uppercase tracking-[0.16em] text-[var(--color-muted)] lg:block">
             {`${conceptGalleryEntries.length} concepts`}
           </div>
-          <LinkButton href={featuredConceptEntry.href} size="sm">
-            Open featured
+          <LinkButton href="/#concept-library" size="sm">
+            Browse library
           </LinkButton>
         </div>
       </Container>

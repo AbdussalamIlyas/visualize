@@ -1,6 +1,6 @@
 # Visualize
 
-Interactive educational MVP for explaining complex systems through one-page visual explainers. The current flagship route teaches **How a Jet Engine Works**, with additional explainers for AI, web delivery, GPS, and solar panels plus a transistor starter route.
+Interactive educational MVP for explaining complex systems through one-page visual explainers. Every concept now uses the same minimalist 3D guided pipeline model, including jet engines, AI, web delivery, GPS, solar panels, and transistors.
 
 ## Stack
 
@@ -38,9 +38,9 @@ npm run dev
 
 - `/` - landing page
 - `/about` - project context
-- `/concept/how-a-jet-engine-works` - flagship jet engine explainer
+- `/concept/how-a-jet-engine-works` - turbofan guided pipeline
 - `/concept/how-the-internet-delivers-a-web-page` - browser, network, and rendering walkthrough
 - `/concept/how-gps-works` - timed-signal to map-position explainer
 - `/concept/how-solar-panels-work` - sunlight-to-electricity explainer
-- `/concept/how-ai-works` - AI walkthrough with a supporting concept map
-- `/concept/how-a-transistor-works` - starter transistor route
+- `/concept/how-ai-works` - AI data-to-output guided pipeline
+- `/concept/how-a-transistor-works` - transistor switching guided pipeline

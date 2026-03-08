@@ -6,9 +6,12 @@ import { ConceptPreview } from "@/components/landing/concept-preview";
 import { Container } from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/link-button";
 import { Pill } from "@/components/ui/pill";
-import { featuredConceptEntry } from "@/data/concept-gallery";
 
-const principles = ["2 to 4 minutes", "Visual-first", "Compact copy"];
+const principles = [
+  "3D guided pipelines",
+  "Minimal clicks",
+  "Details on demand",
+];
 
 export function HeroSection() {
   return (
@@ -25,21 +28,19 @@ export function HeroSection() {
               <Pill tone="accent">Visual-first explainers</Pill>
               <div className="space-y-4">
                 <h1 className="max-w-4xl font-[family:var(--font-display)] text-5xl font-semibold leading-[1.02] tracking-tight text-white sm:text-6xl lg:text-7xl">
-                  Understand systems by watching the state change.
+                  Understand systems through one clear guided pipeline.
                 </h1>
                 <p className="max-w-2xl text-lg leading-8 text-[var(--color-muted)] sm:text-xl">
-                  Guided concept pages for jet engines, AI, web delivery, GPS,
-                  solar panels, and more. The visual stays in front. The copy stays
-                  short.
+                  Every concept uses the same minimalist 3D interaction model:
+                  stage rail first, visual pipeline in the center, and optional
+                  details only when you ask for them.
                 </p>
               </div>
             </div>
             <div className="flex flex-wrap gap-3">
-              <LinkButton href={featuredConceptEntry.href}>
-                {featuredConceptEntry.cta}
-              </LinkButton>
-              <LinkButton href="/#concept-library" variant="secondary">
-                Browse concept library
+              <LinkButton href="/#concept-library">Browse guided pipelines</LinkButton>
+              <LinkButton href="/about" variant="secondary">
+                See the product model
               </LinkButton>
             </div>
             <div className="flex flex-wrap gap-2">

@@ -152,13 +152,14 @@ const stages: Stage[] = [
 export const solarPanelExplainer = {
   id: "solar-panel-pipeline",
   type: "pipeline",
+  sceneVariant: "solar-panel",
   title: "Sunlight-to-electricity walkthrough",
   summary:
     "Follow photons, charge separation, DC flow, and the inverter path that makes solar power usable.",
   intro:
     "Use this view first. Each stage shows how the panel turns light into a directed electrical flow without any moving turbine.",
   defaultStageId: stages[0].id,
-  heroKicker: "Guided pipeline",
+  heroKicker: "3D guided pipeline",
   heroTitle: "Watch sunlight become usable power.",
   heroSummary:
     "Photons free charge, the junction separates it, current leaves the panel, and the inverter makes that output usable.",

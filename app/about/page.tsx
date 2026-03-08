@@ -5,7 +5,7 @@ import { AboutPage } from "@/components/about/about-page";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Learn why Visualize is shifting toward explainer-first pages and how the MVP is designed around visual learning.",
+    "Learn how Visualize uses one minimalist 3D guided pipeline model across every concept page.",
 };
 
 export default function AboutRoute() {

@@ -195,13 +195,14 @@ const stages: Stage[] = [
 export const howAiWorksWalkthrough = {
   id: "walkthrough",
   type: "pipeline",
+  sceneVariant: "ai-system",
   title: "Interactive walkthrough",
   summary:
-    "Primary view. Move through a single AI request as it becomes representation, training signal, prediction, and risk.",
+    "Move through a single AI request as it becomes representation, training signal, prediction, and risk.",
   intro:
-    "Use this view first. Each stage changes the system state so the visual carries the main explanation.",
+    "Use this guided pipeline first. Each stage changes the system state so the visual carries the main explanation.",
   defaultStageId: stages[0].id,
-  heroKicker: "Primary explainer",
+  heroKicker: "3D guided pipeline",
   heroTitle: "Watch AI turn examples into output.",
   heroSummary:
     "Move stage by stage. The visual shows where data enters, where training happens, what the model stores, and why failure modes still appear.",
@@ -617,5 +618,5 @@ export const howAiWorksConcept = {
   },
   glossary,
   sources: sharedSources,
-  explainers: [howAiWorksWalkthrough, howAiWorksMapExplainer],
+  explainers: [howAiWorksWalkthrough],
 } satisfies Concept;

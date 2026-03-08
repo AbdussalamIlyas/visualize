@@ -1,75 +1,65 @@
-# Project Brief V2 - Visualize
+# Project Brief V3 - Visualize
 
 ## 1. Why The Brief Is Changing
 
-The current product direction is too centered on "How AI Works" as a concept map and still relies on a large amount of explanatory text around the interaction.
+The previous brief moved the product away from a text-heavy concept map, but it still left too much room for concept-specific UI divergence.
 
-The next version should shift from:
-- one concept explained mainly through a clickable map
-- multiple layers of surrounding UI copy
-- a fixed node-and-detail-panel mental model
+The next version must be more opinionated:
+- every concept should use the same core interaction model
+- that model should be a 3D interactive guided pipeline
+- the visual treatment should stay consistent across the site
+- the interface should feel minimalist, calm, and easy to use
 
-To:
-- a visual-first educational site
-- one interactive explainer page per concept
-- an experience where the visual teaches the idea and the text supports it
-
-This brief replaces the map-first framing with an explainer-first framing.
+This brief replaces explainer-type experimentation with one clear product shape.
 
 ---
 
-## 2. Concise Critique Of The Current UX And IA
+## 2. Product Vision
 
-### What is working
-- The current app has a clear visual identity and a solid technical foundation.
-- The codebase already separates content from rendering in a reusable way.
-- The current concept route proves there is value in an interactive learning surface.
+Build `Visualize` as a visual-first educational website where each concept is taught through a shared 3D guided pipeline experience.
 
-### Current UX problems
-- The experience is still too text-heavy. Users read hero copy, learning objectives, difficulty framing, detail content, examples, misconceptions, and sources before the interaction fully carries the lesson.
-- The concept map acts more like navigation for text than the main teaching mechanism.
-- The landing page repeats the same message across multiple sections instead of quickly getting users into the explainer.
-- The five-level difficulty system increases copy volume and content maintenance without changing the actual interaction model.
+The user should feel that they are learning one way of navigating the product:
+- choose a stage
+- watch the pipeline state change
+- open extra detail only when needed
 
-### Current information architecture problems
-- The IA is organized around one specific content shape: concept -> nodes -> detail panel.
-- The schema assumes every concept should be represented as positioned nodes with related links.
-- That structure is too narrow for many concepts that would be better taught as a process, simulation, comparison, timeline, or layered scene.
-- "How AI Works" is better framed as a sequence or system flow than as a static concept taxonomy.
-
-### Product implication
-- The product should no longer optimize for "an excellent concept map."
-- It should optimize for "an excellent interactive explainer page," where the visual format is chosen to fit the concept.
+Concepts should differ in content, motion, and story, but not in basic interaction logic.
 
 ---
 
-## 3. Product Vision
+## 3. Product Goal
 
-Build `Visualize` as a visual-first educational website where each concept is primarily learned through one interactive page.
-
-The user should be able to understand a concept by interacting with the page itself, not by reading a long article beside it.
-
-Text should do four jobs only:
-- orient the user
-- label the visual
-- clarify the current step
-- provide optional deeper context
-
-The visual should do the teaching.
-
----
-
-## 4. Product Goal
-
-Create a polished MVP that proves a single interactive explainer page can teach a difficult concept clearly, quickly, and memorably.
-
-The first concept remains `How AI Works`, but the website should be designed so future concepts can use different explainer formats without changing the product structure.
+Create a polished MVP where difficult systems become understandable in 2 to 4 minutes through one consistent visual pattern.
 
 Success means:
-- a first-time user can grasp the core mechanism in 2 to 4 minutes
-- the experience feels visual-first rather than article-first
-- the interaction teaches the concept, instead of only revealing more text
-- the architecture can support future explainers beyond concept maps
+- a first-time user quickly understands how to use any concept page
+- every concept page shares the same visual language and navigation logic
+- the 3D guided pipeline is the center of the experience
+- supporting text stays secondary and compact
+- the product feels simpler as more concepts are added, not more fragmented
+
+---
+
+## 4. Core Product Decisions
+
+### Decision 1
+The product is not a CMS, dashboard, or content platform.
+
+### Decision 2
+The main unit of learning is a 3D guided pipeline page.
+
+### Decision 3
+All concepts should use the same page shell, control placement, and design language.
+
+### Decision 4
+There should be no concept hierarchy in the UI such as:
+- flagship
+- featured
+- starter
+- experimental alternate layout
+
+### Decision 5
+Depth should come from progressive disclosure, not from more panels or more route types.
 
 ---
 
@@ -78,296 +68,246 @@ Success means:
 ### Include
 - lightweight home page
 - about page
-- one flagship concept page for `How AI Works`
-- one dominant interactive explainer surface on that concept page
+- a concept library of guided pipelines
+- one shared concept page shell for all concepts
 - concise supporting copy
 - responsive design for desktop and mobile
 - local structured content data
-- polished motion and transitions
 - accessible controls and focus states
+- polished motion and subtle 3D depth cues
 
-### Exclude for now
+### Exclude
 - creator tools
 - community features
-- comments or reviews
-- search across many concepts
-- database or CMS
-- accounts
-- monetization
-- complex personalization
-- multi-concept platform features
+- search across a large content catalog
+- dashboards
+- multi-layout concept templates
+- alternate map-first routes
+- content management tooling
 
 ---
 
-## 6. Core Product Decisions
-
-### Decision 1
-This MVP is not a platform and not a content management system.
-
-### Decision 2
-The main unit of learning is a visual explainer page, not a node map.
-
-### Decision 3
-The explainer type should be selected based on the concept.
-
-Possible explainer types:
-- pipeline
-- simulation
-- comparison
-- timeline
-- layered scene
-- map
-
-### Decision 4
-Depth should be handled through progressive disclosure, not by default through five fully rewritten versions of the same content.
-
----
-
-## 7. Target Audience
+## 6. Target Audience
 
 ### Primary audience
-General public learners who want to understand difficult systems without needing specialist background first.
+General learners who want a clean mental model of a difficult system without reading a long article first.
 
 ### Secondary audience
-Curious learners with some technical interest who want a cleaner mental model before reading more formal material.
+Curious technical learners who want a fast visual overview before going deeper elsewhere.
 
-The product should especially serve users who learn best through:
-- motion
-- spatial organization
-- step-by-step state change
-- concrete examples
-
----
-
-## 8. Experience Principles
-
-### 8.1 Visual-first
-The most important thing on the page should be the explainer itself.
-
-### 8.2 One clear interaction model
-The page should not compete with itself using too many panels, cards, stats, and explanation blocks.
-
-### 8.3 Progressive disclosure
-Show the core idea first. Reveal details only when the user asks for them or reaches the next stage.
-
-### 8.4 Learn by cause and effect
-Whenever possible, user interaction should change the visual state so the concept becomes easier to understand.
-
-### 8.5 Short supporting text
-Text should be concise by default. Long-form explanation should be optional and secondary.
-
-### 8.6 Concept-fit over template-fit
-Do not force every concept into the same visual structure.
+The product should especially serve people who learn well through:
+- spatial layout
+- visible state change
+- guided sequencing
+- short contextual cues
 
 ---
 
-## 9. Revised Concept Direction For "How AI Works"
+## 7. Experience Principles
 
-`How AI Works` should no longer be taught mainly as an 11-node concept map.
+### 7.1 Visual-first
+The guided pipeline dominates the page.
 
-It should be taught as a system flow with visible transformation across stages.
+### 7.2 Consistent interaction model
+Every concept should feel immediately familiar once the user has used one page.
 
-Recommended learning arc:
-1. Input enters the system
-2. Data becomes machine-readable representation
-3. Training adjusts the model using examples and error signals
-4. The model stores useful patterns in learned parameters
-5. Inference produces an output for a new input
-6. Failure modes and limits appear when the system is uncertain, biased, underinformed, or ungrounded
+### 7.3 Progressive disclosure
+The interface shows the main mechanism first and optional detail second.
 
-Useful supporting ideas such as tokens, neural networks, and hallucinations should appear when relevant to the stage, not as equally weighted top-level nodes by default.
+### 7.4 Cause and effect
+User actions should visibly change the system state in a way that improves understanding.
 
----
+### 7.5 Minimal copy
+Text should orient, label, and clarify, not compete with the visual.
 
-## 10. Page Structure
+### 7.6 Minimal navigation
+The user should rarely face more than one primary next action at a time.
 
-## 10.1 Home Page
-
-### Purpose
-Get users into the explainer quickly.
-
-### Include
-- short value proposition
-- featured concept card
-- interactive or animated preview
-- clear primary CTA
-- very short explanation of the product model
-
-### Avoid
-- multiple sections that restate the same promise
-- long marketing copy
-- heavy preamble before entering the concept page
+### 7.7 Concept-specific content, shared shell
+The story and labels change per concept, but the page structure does not.
 
 ---
 
-## 10.2 Concept Page
+## 8. Unified Interaction Model
 
-### Purpose
-Deliver the learning experience.
+Every concept page should use this structure:
 
-### Required layout behavior
-- the explainer surface dominates the viewport
-- supporting text is compact and secondary
-- sources and glossary are available but collapsible
-- mobile still preserves the explainer as the primary focus
+1. Compact concept intro
+2. Stage rail or guided progress control
+3. Large 3D pipeline canvas
+4. Lightweight side detail panel
+5. Optional glossary and sources in collapsed areas
 
-### Recommended content zones
-- compact page intro
-- main interactive visual
-- stage controls or guided progress controls
-- lightweight contextual copy
-- optional deeper notes
-- optional sources and glossary
+The intended user flow is:
+1. Land on the page
+2. Understand the current stage immediately
+3. Click or tap the next stage
+4. See the pipeline update
+5. Open a hotspot only if more detail is needed
 
-### Avoid
-- long persistent detail rails
-- large stats sections
-- dense objective cards
-- treating the explainer like a dashboard
+This interaction model should remain stable across all concepts.
 
 ---
 
-## 10.3 About Page
+## 9. Usability Requirements
 
-### Purpose
-Explain the product philosophy briefly.
+The product should reflect common click-behavior and usability guidance:
 
-### Include
-- why the product exists
-- who it is for
-- why the experience is visual-first
-- current MVP scope
-- short future direction
+### 9.1 Fewer competing actions
+Avoid presenting multiple equally weighted paths at once.
 
-The about page should stay concise.
+### 9.2 Clear primary action
+The stage rail should be the most obvious next step.
 
----
+### 9.3 Fast recognition
+Controls should appear in the same places across concept pages so users do not need to relearn the interface.
 
-## 11. Content Strategy
+### 9.4 Reduced cognitive load
+Keep labels short, avoid dense option sets, and collapse secondary material by default.
 
-Each concept should be broken into:
-- the core question
-- the minimum sequence needed to understand it
-- the visual states that make the answer legible
-- the optional deeper details
+### 9.5 Efficient click flow
+The interface should usually allow:
+- one click to change stage
+- zero extra clicks to see the main visual update
+- one extra click only when the user wants more detail
 
-Default rule:
-- if the concept can be understood through 4 to 6 stages, prefer a staged explainer
-- if the concept depends on relationships across entities, a map may be appropriate
-- if the concept depends on comparison, use side-by-side states
-- if the concept depends on chronology, use a timeline
+### 9.6 Touch and keyboard support
+Targets must be comfortable on touch devices and fully reachable by keyboard.
+
+### 9.7 Mobile clarity
+On mobile, the stage rail and visual surface must remain the center of gravity.
 
 ---
 
-## 12. Depth Model
-
-The product should reduce dependence on the current five-level rewrite model.
-
-For MVP, prefer one of these approaches:
-
-### Option A
-Three depth presets:
-- Basic
-- Deeper
-- Technical
-
-### Option B
-Single core mode with optional expandable technical notes
-
-Recommended MVP choice:
-- Option B
-
-Reason:
-- lower content overhead
-- less text duplication
-- faster to maintain
-- keeps focus on interaction quality
-
-If multiple depth modes remain in scope later, they should change:
-- annotation density
-- visible callouts
-- optional notes
-
-They should not require rewriting the entire page into five prose versions unless there is strong evidence this improves learning.
-
----
-
-## 13. Interaction Model
-
-The explainer should teach through state changes.
-
-Examples of valid interactions:
-- step through a sequence
-- scrub through a process
-- click hotspots to reveal meaning
-- toggle between before and after states
-- compare model behavior under different conditions
-- reveal error states and limitations in context
-
-Each interaction should answer a learning question, not exist only for decoration.
-
----
-
-## 14. Design Direction
+## 10. Design Direction
 
 ### Desired feeling
-- intentional
+- minimalist
 - premium
 - calm
+- focused
 - modern
-- visual
-- educational without feeling like a textbook
+- intuitive
 
 ### Avoid
 - dashboard clutter
-- generic startup landing-page patterns
-- long text blocks
-- overuse of glass panels with equally weighted content
-- map-heavy layouts when the concept does not require them
+- marketing-page bloat
+- special treatment for one concept over others
+- concept-specific shells that break consistency
+- large persistent side rails full of prose
+- decorative motion that slows the user down
 
 ### Visual principles
-- strong focal area
-- clear stage transitions
-- limited on-screen text
-- layered depth
-- restrained but meaningful motion
-- clear contrast and hierarchy
+- one dominant focal surface
+- subtle but readable 3D depth
+- restrained motion
+- limited on-screen copy
+- strong hierarchy
+- generous spacing
+- obvious active state
 
 ---
 
-## 15. Motion Guidelines
+## 11. Concept Direction For "How AI Works"
+
+`How AI Works` should be taught as a guided pipeline, not as a map or vocabulary browser.
+
+Recommended learning arc:
+1. Examples and input enter the system
+2. Human input becomes machine-readable representation
+3. Training adjusts the model through prediction and error
+4. The model stores patterns in learned parameters
+5. Inference produces an output for a new input
+6. Failure modes appear through weak grounding, ambiguity, and bias
+
+Supporting ideas such as tokens, hallucinations, and grounding should appear as optional hotspots inside the pipeline.
+
+---
+
+## 12. Site Structure
+
+## 12.1 Home Page
+
+### Purpose
+Get users into the concept library quickly while teaching the shared interaction model.
+
+### Include
+- short value proposition
+- preview of the shared guided pipeline pattern
+- concept library cards with equal treatment
+- clear CTA to browse concepts
+- concise explanation of how the interface works
+
+### Avoid
+- one featured or flagship concept block
+- repeated marketing sections
+- long introductory copy before the user sees the library
+
+## 12.2 Concept Page
+
+### Purpose
+Deliver the full learning experience through the shared guided pipeline shell.
+
+### Required behavior
+- the pipeline canvas dominates the viewport
+- the stage rail is easy to scan and click
+- the detail panel stays compact
+- glossary and sources are collapsible
+- the same structure appears on every concept page
+
+### Avoid
+- alternate views such as maps or dashboard modes
+- long persistent detail rails
+- large stat sections
+- layout changes that force relearning
+
+## 12.3 About Page
+
+### Purpose
+Explain the product model briefly and clearly.
+
+### Include
+- why guided pipelines are the core interaction
+- why consistency matters across concepts
+- why the design stays minimalist
+- current MVP scope
+
+---
+
+## 13. Motion Guidelines
 
 Use motion to:
 - show causality
-- transition between stages
+- guide the eye to the active stage
 - emphasize what changed
-- direct attention to the active part of the visual
+- support the 3D depth illusion
 
 Do not use motion to:
-- decorate static copy
+- decorate static text
 - create constant ambient distraction
-- make navigation feel slower
+- slow navigation
+- make one concept feel more important than another
 
 Motion should improve comprehension first and aesthetics second.
 
 ---
 
-## 16. Accessibility And Usability
+## 14. Accessibility
 
 Minimum expectations:
-- keyboard-accessible controls
-- touch-friendly interaction targets
+- keyboard-accessible stage controls
+- touch-friendly targets
 - high enough contrast
 - reduced-motion support
 - semantic structure where possible
-- screen-reader labels for explainer controls
-- mobile layouts that preserve primary interaction clarity
+- screen-reader labels for interactive controls
+- preserved clarity on small screens
 
-The visual-first direction must not make the product interaction-only in a way that becomes inaccessible.
+The visual-first direction must remain usable, not merely impressive.
 
 ---
 
-## 17. Technical Direction
+## 15. Technical Direction
 
 ### Required stack
 - Next.js App Router
@@ -375,22 +315,24 @@ The visual-first direction must not make the product interaction-only in a way t
 - Tailwind CSS
 - Motion
 
-### Optional by explainer type
-- React Flow only when a concept genuinely needs a map
-- canvas or SVG-based rendering when they better fit the explainer
+### UI architecture
+- one reusable guided-pipeline page shell
+- one reusable pipeline canvas component
+- shared stage navigation pattern
+- shared support panel pattern
 
 ### Data direction
 - local structured content for v1
-- schema should support multiple explainer types
-- content should be separated from rendering logic
+- concept data should describe stages, layers, hotspots, and copy
+- rendering logic should stay shared across concepts
 
 ---
 
-## 18. Proposed Data Model For Visual Explainers
+## 16. Proposed Data Model
 
-The schema should move from map-first to explainer-first.
+The schema should be pipeline-first.
 
-### 18.1 Concept
+### 16.1 Concept
 
 Fields:
 - `slug`
@@ -401,29 +343,27 @@ Fields:
 - `estimatedMinutes`
 - `tags`
 - `status`
+- `theme`
 
-### 18.2 ExplainerPage
+### 16.2 PipelineExplainer
 
 Fields:
-- `conceptSlug`
-- `explainerType`
-- `theme`
-- `defaultStageId`
+- `id`
+- `title`
+- `summary`
 - `intro`
+- `heroKicker`
+- `heroTitle`
+- `heroSummary`
+- `defaultStageId`
+- `layers`
+- `connections`
+- `hotspots`
+- `stages`
 - `sources`
 - `glossary`
 
-### 18.3 ExplainerType
-
-Enum values:
-- `pipeline`
-- `simulation`
-- `comparison`
-- `timeline`
-- `layered-scene`
-- `map`
-
-### 18.4 Stage
+### 16.3 Stage
 
 Fields:
 - `id`
@@ -431,21 +371,23 @@ Fields:
 - `goal`
 - `headline`
 - `body`
+- `actionLabel`
 - `visibleLayerIds`
 - `activeHotspotIds`
 - `statePatch`
 
-### 18.5 VisualLayer
+### 16.4 VisualLayer
 
 Fields:
 - `id`
+- `label`
+- `shortLabel`
 - `kind`
-- `asset`
-- `positioning`
-- `states`
-- `animations`
+- `tone`
+- `position`
+- `description`
 
-### 18.6 Hotspot
+### 16.5 Hotspot
 
 Fields:
 - `id`
@@ -454,104 +396,76 @@ Fields:
 - `body`
 - `media`
 - `revealsInStages`
-- `relatedGlossaryTerms`
+- `relatedGlossaryTermIds`
 
-### 18.7 DepthPreset
-
-Fields:
-- `id`
-- `label`
-- `copyDensity`
-- `enabledHotspots`
-- `enabledCallouts`
-
-### 18.8 CheckPoint
-
-Fields:
-- `id`
-- `prompt`
-- `expectedInsight`
-- `feedback`
-
-### 18.9 Source
-
-Fields:
-- `title`
-- `url`
-- `appliesTo`
-- `note`
-
-### Schema note
-Map-specific fields such as node position and graph relationships should exist only inside the `map` explainer variant, not as required fields for every concept.
+Schema rule:
+- do not require alternate explainer types for MVP
+- do not model concept maps as first-class UI routes
 
 ---
 
-## 19. MVP Content Model For "How AI Works"
-
-Recommended explainer type:
-- `pipeline`
+## 17. MVP Content Model For "How AI Works"
 
 Recommended stages:
-1. What goes in
-2. How data is represented
-3. How training works
-4. What the model learns
-5. How prediction works
-6. Where it fails and why
+1. Inputs and examples
+2. Representation
+3. Training loop
+4. Learned model
+5. Inference
+6. Limits and risks
 
-Optional supporting hotspots:
+Recommended optional hotspots:
 - tokens
-- neural networks
-- confidence
+- error signal
+- learned parameters
+- inference
+- grounding
 - hallucinations
 - bias
-- grounding
 
 ---
 
-## 20. Implementation Plan
+## 18. Implementation Plan
 
 ### Phase 1 - Product reframing
-- replace the current concept-map-first brief with this visual-first brief
-- align the home page around fast entry into the flagship explainer
-- simplify the IA so the concept page is the product center of gravity
+- remove featured or flagship concept treatment
+- align the home page around the shared guided-pipeline model
+- make the concept library visually consistent
 
-### Phase 2 - Story and interaction design
-- storyboard `How AI Works` as a 4 to 6 stage interactive sequence
-- define what the user sees, changes, and learns at each stage
-- reduce copy until the page can teach mostly through visual state change
+### Phase 2 - Shared page shell
+- standardize one concept page layout for every concept
+- keep the stage rail, pipeline canvas, and detail panel in stable positions
+- move glossary and sources into secondary collapsible areas
 
-### Phase 3 - Data model redesign
-- replace the current node-map schema with an explainer-first schema
-- support multiple explainer types without requiring map fields everywhere
-- keep sources, glossary terms, and optional depth notes structured
+### Phase 3 - Story and interaction design
+- storyboard each concept as a short guided pipeline
+- reduce copy until the main explanation is carried by state change
+- ensure one obvious next action at each step
 
-### Phase 4 - UI architecture
-- create a concept page shell centered on the explainer surface
-- move sources, glossary, and deep notes into secondary collapsible areas
-- remove or reduce large persistent descriptive panels
+### Phase 4 - Visual refinement
+- add subtle 3D depth cues to the pipeline canvas
+- keep motion restrained and informative
+- validate desktop and mobile clarity
 
-### Phase 5 - Build the first flagship explainer
-- implement `How AI Works` using the new schema and page model
-- validate desktop and mobile usability
-- confirm the experience remains understandable without reading large blocks of text
-
-### Phase 6 - Evaluate extension path
-- decide which future concepts need pipeline, simulation, comparison, timeline, layered scene, or map formats
-- only then generalize reusable explainer primitives
+### Phase 5 - Usability pass
+- review click flow and tap targets
+- confirm stage changes are obvious and low-friction
+- check that optional detail never competes with the main task
 
 ---
 
-## 21. Non-Goals For This Brief
+## 19. Non-Goals
 
 This brief does not ask for:
+- a featured concept hierarchy
+- a map-first learning product
+- multiple concept page shells
 - a creator platform
 - a universal visual editor
+- a text-heavy article product
 - a database-backed content system
-- a large content library
-- a text-heavy educational article experience
 
 The goal is narrower:
-- one strong visual learning product shape
-- one flagship explainer
-- an architecture that can expand without locking every concept into a concept map
+- one strong shared product shape
+- one consistent 3D guided pipeline language
+- a concept library that grows without increasing UI complexity

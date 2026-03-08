@@ -1,11 +1,7 @@
 "use client";
 
-import { startTransition, useState } from "react";
-
 import { ConceptEmptyState } from "@/components/concept/concept-empty-state";
 import { ConceptPageHero } from "@/components/concept/concept-page-hero";
-import { ExplainerSwitcher } from "@/components/concept/explainer-switcher";
-import { MapExplainerView } from "@/components/concept/map-explainer";
 import { MoreConcepts } from "@/components/concept/more-concepts";
 import { PipelineExplainerView } from "@/components/concept/pipeline-explainer";
 import { SupportPanels } from "@/components/concept/support-panels";
@@ -15,7 +11,6 @@ import {
   getCombinedGlossary,
   getCombinedSources,
   getDefaultExplainer,
-  getExplainerById,
 } from "@/lib/concept-utils";
 
 type ConceptExplorerProps = {
@@ -24,9 +19,6 @@ type ConceptExplorerProps = {
 
 export function ConceptExplorer({ concept }: ConceptExplorerProps) {
   const hasExplainers = concept.explainers.length > 0;
-  const [selectedExplainerId, setSelectedExplainerId] = useState(
-    () => concept.defaultExplainerId,
-  );
 
   if (!hasExplainers) {
     return (
@@ -41,20 +33,21 @@ export function ConceptExplorer({ concept }: ConceptExplorerProps) {
     );
   }
 
-  const hasMultipleExplainers = concept.explainers.length > 1;
-  const selectedExplainer =
-    getExplainerById(concept, selectedExplainerId) ?? getDefaultExplainer(concept);
+  const selectedExplainer = getDefaultExplainer(concept);
   const sources = getCombinedSources(concept, selectedExplainer);
   const glossary = getCombinedGlossary(concept, selectedExplainer);
 
-  function handleSelectExplainer(explainerId: string) {
-    if (explainerId === selectedExplainer.id) {
-      return;
-    }
-
-    startTransition(() => {
-      setSelectedExplainerId(explainerId);
-    });
+  if (selectedExplainer.type !== "pipeline") {
+    return (
+      <div className="pb-20 pt-14 sm:pb-24 sm:pt-20">
+        <Container>
+          <ConceptEmptyState
+            description="This concept is missing the shared guided-pipeline configuration."
+            title="A pipeline explainer is required."
+          />
+        </Container>
+      </div>
+    );
   }
 
   return (
@@ -65,36 +58,18 @@ export function ConceptExplorer({ concept }: ConceptExplorerProps) {
         </p>
 
         <ConceptPageHero
-          eyebrow="Interactive concept"
+          eyebrow="Interactive pipeline"
           minutes={concept.estimatedMinutes}
-          note={
-            hasMultipleExplainers
-              ? "Use the guided walkthrough first. Switch views only when you want the supporting vocabulary map."
-              : "Use the stage rail and hotspots first. Sources and glossary stay secondary on purpose."
-          }
+          note="Use the stage rail first. The central pipeline changes immediately, and supporting detail only opens when you ask for it."
           question={concept.question}
           summary={concept.summary}
           tags={concept.tags}
           theme={concept.theme}
           title={concept.title}
         />
-
-        {hasMultipleExplainers ? (
-          <ExplainerSwitcher
-            explainers={concept.explainers}
-            onChange={handleSelectExplainer}
-            value={selectedExplainer.id}
-          />
-        ) : null}
       </Container>
 
-      {selectedExplainer.type === "pipeline" ? (
-        <PipelineExplainerView explainer={selectedExplainer} theme={concept.theme} />
-      ) : (
-        <Container className="mt-6">
-          <MapExplainerView explainer={selectedExplainer} />
-        </Container>
-      )}
+      <PipelineExplainerView explainer={selectedExplainer} theme={concept.theme} />
 
       <Container className="mt-6 space-y-8">
         <SupportPanels

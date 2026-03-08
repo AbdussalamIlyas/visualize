@@ -1,23 +1,21 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { startTransition, useState } from "react";
 
+import type { PipelineSceneCanvasProps } from "@/components/concept/pipeline-scene-canvas";
 import { Pill } from "@/components/ui/pill";
 import type {
   ConceptTheme,
   Hotspot,
   PipelineExplainer,
   StageMetricTone,
-  VisualConnection,
-  VisualLayer,
-  VisualLayerTone,
 } from "@/lib/concept-schema";
 import {
   getDefaultHotspotId,
   getDefaultPipelineStage,
   getHotspotById,
-  getLayerById,
   getPipelineStageById,
   getStageHotspots,
 } from "@/lib/concept-utils";
@@ -28,29 +26,18 @@ type PipelineExplainerProps = {
   theme?: ConceptTheme;
 };
 
-function toneClasses(tone: VisualLayerTone, isActive: boolean) {
-  if (tone === "warning") {
-    return isActive
-      ? "border-[rgba(255,157,122,0.42)] bg-[linear-gradient(180deg,rgba(255,157,122,0.22),rgba(39,20,22,0.95))]"
-      : "border-[rgba(255,157,122,0.2)] bg-[rgba(39,20,22,0.82)]";
-  }
-
-  if (tone === "secondary") {
-    return isActive
-      ? "border-[rgba(81,224,203,0.42)] bg-[linear-gradient(180deg,rgba(81,224,203,0.18),rgba(16,32,35,0.94))]"
-      : "border-[rgba(81,224,203,0.2)] bg-[rgba(13,28,33,0.82)]";
-  }
-
-  if (tone === "accent") {
-    return isActive
-      ? "border-[rgba(149,187,255,0.44)] bg-[linear-gradient(180deg,rgba(137,181,255,0.24),rgba(16,24,48,0.95))]"
-      : "border-[rgba(149,187,255,0.2)] bg-[rgba(14,20,38,0.84)]";
-  }
-
-  return isActive
-    ? "border-white/20 bg-[rgba(35,40,57,0.92)]"
-    : "border-white/10 bg-[rgba(17,22,35,0.82)]";
-}
+const PipelineSceneCanvas = dynamic<PipelineSceneCanvasProps>(
+  () =>
+    import("@/components/concept/pipeline-scene-canvas").then(
+      (mod) => mod.PipelineSceneCanvas,
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(143,181,255,0.14),rgba(143,181,255,0)_52%)]" />
+    ),
+  },
+);
 
 function metricToneClasses(tone: StageMetricTone = "neutral") {
   if (tone === "warning") {
@@ -64,33 +51,11 @@ function metricToneClasses(tone: StageMetricTone = "neutral") {
   return "border-white/10 bg-white/[0.03]";
 }
 
-function getConnectionState(
-  connection: VisualConnection,
-  visibleLayerIds: Set<string>,
-  highlightedLayerIds: Set<string>,
-) {
-  const isVisible =
-    visibleLayerIds.has(connection.sourceLayerId) &&
-    visibleLayerIds.has(connection.targetLayerId);
-  const isHighlighted =
-    highlightedLayerIds.has(connection.sourceLayerId) ||
-    highlightedLayerIds.has(connection.targetLayerId);
-
-  return { isVisible, isHighlighted };
-}
-
-function getLayerCenter(layer: VisualLayer) {
-  return {
-    x: layer.position.x + layer.position.width / 2,
-    y: layer.position.y + layer.position.height / 2,
-  };
-}
-
 export function PipelineExplainerView({
   explainer,
   theme,
 }: PipelineExplainerProps) {
-  const shouldReduceMotion = useReducedMotion();
+  const shouldReduceMotion = Boolean(useReducedMotion());
   const initialStage = getDefaultPipelineStage(explainer);
   const [stageId, setStageId] = useState(initialStage.id);
   const [hotspotId, setHotspotId] = useState(
@@ -168,15 +133,18 @@ export function PipelineExplainerView({
                     </div>
                   </div>
                   <div className="rounded-[1.35rem] border border-white/10 bg-white/[0.03] px-4 py-4">
-                    <p className="section-eyebrow">Current cue</p>
+                    <p className="section-eyebrow">Use this first</p>
                     <p className="mt-3 text-sm leading-6 text-[var(--color-muted)]">
                       {currentStage.actionLabel}
+                    </p>
+                    <p className="mt-3 text-xs uppercase tracking-[0.16em] text-[var(--color-muted)]">
+                      {"Stage rail -> pipeline change -> optional detail"}
                     </p>
                   </div>
                 </div>
 
                 <div
-                  aria-label="Walkthrough stages"
+                  aria-label="Guided pipeline stages"
                   className="flex snap-x gap-2 overflow-x-auto pb-1"
                   role="tablist"
                 >
@@ -229,168 +197,21 @@ export function PipelineExplainerView({
                   ) : null}
                   <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:24px_24px]" />
                   <div className="relative aspect-[16/11] sm:aspect-[16/9]">
-                    <svg
-                      aria-hidden="true"
-                      className="absolute inset-0 h-full w-full"
-                      preserveAspectRatio="none"
-                      viewBox="0 0 100 100"
-                    >
-                      {explainer.connections.map((connection) => {
-                        const source = getLayerById(explainer, connection.sourceLayerId);
-                        const target = getLayerById(explainer, connection.targetLayerId);
-
-                        if (!source || !target) {
-                          return null;
-                        }
-
-                        const sourceCenter = getLayerCenter(source);
-                        const targetCenter = getLayerCenter(target);
-                        const connectionState = getConnectionState(
-                          connection,
-                          visibleLayerIds,
-                          highlightedLayerIds,
-                        );
-
-                        if (!connectionState.isVisible) {
-                          return null;
-                        }
-
-                        return (
-                          <motion.line
-                            key={connection.id}
-                            animate={{
-                              opacity: connectionState.isHighlighted ? 0.95 : 0.38,
-                              strokeWidth: connectionState.isHighlighted ? 2.8 : 1.6,
-                            }}
-                            initial={false}
-                            stroke={
-                              connectionState.isHighlighted
-                                ? "rgba(143,181,255,0.9)"
-                                : "rgba(163,177,214,0.36)"
-                            }
-                            x1={sourceCenter.x}
-                            x2={targetCenter.x}
-                            y1={sourceCenter.y}
-                            y2={targetCenter.y}
-                          />
-                        );
-                      })}
-                    </svg>
-
-                    {explainer.layers.map((layer) => {
-                      const isVisible = visibleLayerIds.has(layer.id);
-
-                      if (!isVisible) {
-                        return null;
-                      }
-
-                      const isHighlighted = highlightedLayerIds.has(layer.id);
-                      const isDimmed = !isHighlighted;
-                      const isOutput = layer.id === "output";
-
-                      return (
-                        <motion.div
-                          key={layer.id}
-                          animate={
-                            shouldReduceMotion
-                              ? { opacity: 1 }
-                              : {
-                                  opacity: 1,
-                                  scale: isHighlighted ? 1.01 : 1,
-                                  y: 0,
-                                }
-                          }
-                          className="absolute"
-                          initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
-                          style={{
-                            left: `${layer.position.x}%`,
-                            top: `${layer.position.y}%`,
-                            width: `${layer.position.width}%`,
-                            height: `${layer.position.height}%`,
-                          }}
-                          transition={{ duration: shouldReduceMotion ? 0 : 0.24 }}
-                        >
-                          <div
-                            className={cx(
-                              "flex h-full flex-col justify-between rounded-[1.5rem] border px-4 py-4 shadow-[0_20px_55px_rgba(4,10,24,0.38)] backdrop-blur-sm transition sm:px-5",
-                              toneClasses(layer.tone, isHighlighted),
-                              isDimmed && "opacity-80",
-                            )}
-                          >
-                            <div className="flex items-start justify-between gap-3">
-                              <span className="rounded-full border border-white/10 bg-white/[0.06] px-2 py-1 text-[0.68rem] uppercase tracking-[0.16em] text-[var(--color-muted)]">
-                                {layer.shortLabel}
-                              </span>
-                              <span
-                                className={cx(
-                                  "h-2.5 w-2.5 rounded-full",
-                                  isHighlighted
-                                    ? "bg-[var(--color-accent)] shadow-[0_0_18px_rgba(143,181,255,0.7)]"
-                                    : "bg-white/20",
-                                )}
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <h3 className="text-base font-semibold text-white sm:text-lg">
-                                {layer.label}
-                              </h3>
-                              {isOutput && currentStage.statePatch.outputLabel ? (
-                                <p className="rounded-[1rem] border border-white/10 bg-white/[0.05] px-3 py-2 text-xs font-medium text-white">
-                                  {currentStage.statePatch.outputLabel}
-                                </p>
-                              ) : null}
-                            </div>
-                          </div>
-                        </motion.div>
-                      );
-                    })}
-
-                    {stageHotspots.map((hotspot) => {
-                      const isActive = hotspot.id === activeHotspot?.id;
-
-                      return (
-                        <motion.button
-                          key={hotspot.id}
-                          animate={shouldReduceMotion ? undefined : { scale: 1 }}
-                          className="absolute -translate-x-1/2 -translate-y-1/2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg)]"
-                          onClick={() => handleSelectHotspot(hotspot)}
-                          style={{
-                            left: `${hotspot.anchor.x}%`,
-                            top: `${hotspot.anchor.y}%`,
-                          }}
-                          type="button"
-                          whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
-                        >
-                          <span
-                            className={cx(
-                              "flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-medium shadow-[0_18px_40px_rgba(4,10,24,0.38)] backdrop-blur-md transition",
-                              hotspot.tone === "warning"
-                                ? "border-[rgba(255,157,122,0.24)] bg-[rgba(49,20,20,0.88)] text-white"
-                                : hotspot.tone === "secondary"
-                                  ? "border-[rgba(81,224,203,0.24)] bg-[rgba(12,31,35,0.88)] text-white"
-                                  : "border-[rgba(149,187,255,0.24)] bg-[rgba(15,22,40,0.92)] text-white",
-                              isActive && "scale-[1.02]",
-                            )}
-                          >
-                            <span
-                              className={cx(
-                                "h-2.5 w-2.5 rounded-full",
-                                hotspot.tone === "warning"
-                                  ? "bg-[#ff9d7a]"
-                                  : hotspot.tone === "secondary"
-                                    ? "bg-[var(--color-accent-secondary)]"
-                                    : "bg-[var(--color-accent)]",
-                              )}
-                            />
-                            <span className="hidden sm:inline">{hotspot.label}</span>
-                          </span>
-                        </motion.button>
-                      );
-                    })}
+                    <PipelineSceneCanvas
+                      activeHotspotId={activeHotspot?.id ?? null}
+                      currentStage={currentStage}
+                      explainer={explainer}
+                      highlightedLayerIds={highlightedLayerIds}
+                      onSelectHotspot={handleSelectHotspot}
+                      shouldReduceMotion={shouldReduceMotion}
+                      stageHotspots={stageHotspots}
+                      theme={theme}
+                      visibleLayerIds={visibleLayerIds}
+                    />
 
                     <div className="pointer-events-none absolute inset-x-4 bottom-4 rounded-[1.25rem] border border-white/10 bg-[rgba(8,12,24,0.72)] px-4 py-3 backdrop-blur-md sm:inset-x-auto sm:left-4 sm:max-w-xl">
                       <p className="text-[0.68rem] uppercase tracking-[0.16em] text-[var(--color-accent)]">
-                        Current change
+                        What changed
                       </p>
                       <AnimatePresence mode="wait">
                         <motion.p
@@ -481,7 +302,7 @@ export function PipelineExplainerView({
 
                 <section className="space-y-3">
                   <div className="flex items-center justify-between gap-3">
-                    <h4 className="text-lg font-semibold text-white">Hotspots</h4>
+                    <h4 className="text-lg font-semibold text-white">Details on demand</h4>
                     <span className="text-xs uppercase tracking-[0.16em] text-[var(--color-muted)]">
                       {stageHotspots.length}
                     </span>
@@ -534,7 +355,9 @@ export function PipelineExplainerView({
                       </motion.article>
                     </AnimatePresence>
                   ) : (
-                    <p className="text-sm text-[var(--color-muted)]">No hotspots yet.</p>
+                    <p className="text-sm text-[var(--color-muted)]">
+                      No extra details for this stage.
+                    </p>
                   )}
                 </section>
               </aside>

@@ -6,7 +6,7 @@ import { cx } from "@/lib/utils";
 
 type ConceptLinkCardProps = {
   entry: ConceptGalleryEntry;
-  variant?: "featured" | "default" | "compact";
+  variant?: "default" | "compact";
 };
 
 function previewStyle(entry: ConceptGalleryEntry): CSSProperties {
@@ -19,18 +19,13 @@ export function ConceptLinkCard({
   entry,
   variant = "default",
 }: ConceptLinkCardProps) {
-  const isFeatured = variant === "featured";
   const isCompact = variant === "compact";
 
   return (
     <Link
       className={cx(
         "group relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-[rgba(10,14,26,0.84)] transition duration-300 hover:-translate-y-0.5 hover:border-white/20",
-        isFeatured
-          ? "grid gap-5 p-5 lg:grid-cols-[minmax(0,1.18fr)_minmax(18rem,24rem)] lg:p-6"
-          : isCompact
-            ? "flex h-full flex-col gap-4 p-5"
-            : "flex h-full flex-col gap-5 p-5",
+        isCompact ? "flex h-full flex-col gap-4 p-5" : "flex h-full flex-col gap-5 p-5",
       )}
       href={entry.href}
     >
@@ -52,7 +47,7 @@ export function ConceptLinkCard({
           <h3
             className={cx(
               "font-[family:var(--font-display)] font-semibold tracking-tight text-white",
-              isFeatured ? "text-4xl sm:text-[2.8rem]" : "text-2xl",
+              "text-2xl",
             )}
           >
             {entry.title}
@@ -100,10 +95,7 @@ export function ConceptLinkCard({
             </div>
 
             <div
-              className={cx(
-                "grid gap-2",
-                isFeatured ? "sm:grid-cols-2" : "grid-cols-2",
-              )}
+              className="grid grid-cols-2 gap-2"
             >
               {entry.stagePreview.map((stage, index) => (
                 <div

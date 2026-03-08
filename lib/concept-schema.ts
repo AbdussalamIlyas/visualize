@@ -22,6 +22,15 @@ export type ExplainerType =
   | "layered-scene"
   | "map";
 
+export type SceneVariant =
+  | "generic"
+  | "jet-engine"
+  | "gps"
+  | "solar-panel"
+  | "transistor"
+  | "web-page"
+  | "ai-system";
+
 export type ConceptTheme = {
   accent: string;
   accentSecondary: string;
@@ -55,6 +64,7 @@ export type VisualLayer = {
   tone: VisualLayerTone;
   position: VisualPosition;
   description: string;
+  depth?: number;
 };
 
 export type VisualConnection = {
@@ -125,6 +135,7 @@ export type BaseExplainer = {
 
 export type PipelineExplainer = BaseExplainer & {
   type: "pipeline";
+  sceneVariant?: SceneVariant;
   heroKicker: string;
   heroTitle: string;
   heroSummary: string;

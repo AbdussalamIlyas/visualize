@@ -2,14 +2,7 @@ import { ConceptLinkCard } from "@/components/concept/concept-link-card";
 import { HeroSection } from "@/components/landing/hero-section";
 import { Container } from "@/components/ui/container";
 import { SectionHeading } from "@/components/ui/section-heading";
-import {
-  conceptGalleryEntries,
-  featuredConceptEntry,
-} from "@/data/concept-gallery";
-
-const libraryEntries = conceptGalleryEntries.filter(
-  (entry) => entry.href !== featuredConceptEntry.href,
-);
+import { conceptGalleryEntries } from "@/data/concept-gallery";
 
 export function LandingPage() {
   return (
@@ -19,14 +12,12 @@ export function LandingPage() {
         <Container className="space-y-8">
           <SectionHeading
             eyebrow="Concept library"
-            title="A calmer, more curated collection."
-            description="Start with the flagship jet engine route, then branch into newer explainers for web delivery, GPS, solar power, AI, and the transistor starter."
+            title="One design language across every concept."
+            description="Every concept uses the same 3D guided pipeline shell, compact supporting copy, and minimal navigation so the interaction stays easy to learn."
           />
 
-          <ConceptLinkCard entry={featuredConceptEntry} variant="featured" />
-
-          <div className="grid gap-4 xl:grid-cols-3">
-            {libraryEntries.map((entry) => (
+          <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+            {conceptGalleryEntries.map((entry) => (
               <ConceptLinkCard key={entry.href} entry={entry} />
             ))}
           </div>
