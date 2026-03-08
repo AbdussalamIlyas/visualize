@@ -1,93 +1,178 @@
-export const difficultyLevels = [
-  "Child",
-  "Teenager",
-  "College Student",
-  "Graduate Student",
-  "Expert",
-] as const;
-
-export type DifficultyLevel = (typeof difficultyLevels)[number];
-
-export type DifficultyMeta = {
-  order: number;
-  summary: string;
-  lens: string;
-  audience: string;
-};
-
-export const difficultyMetadata: Record<DifficultyLevel, DifficultyMeta> = {
-  Child: {
-    order: 1,
-    summary: "Simple metaphors, intuitive language, and almost no jargon.",
-    lens: "Prioritizes intuition over precision so the basic shape is easy to grasp.",
-    audience: "Best for first-time learners who need the idea to feel concrete fast.",
-  },
-  Teenager: {
-    order: 2,
-    summary: "Adds structure and core terms without becoming dense.",
-    lens: "Introduces technical ideas gently while keeping the system easy to track.",
-    audience: "Best for curious learners who want more than analogies but not full formalism.",
-  },
-  "College Student": {
-    order: 3,
-    summary: "Balanced conceptual depth with meaningful technical vocabulary.",
-    lens: "Explains the workflow clearly enough to connect intuition with mechanism.",
-    audience: "Best for learners who want a solid mental model they can build on.",
-  },
-  "Graduate Student": {
-    order: 4,
-    summary: "More formal, system-level, and technically careful.",
-    lens: "Emphasizes process detail, model behavior, and cleaner conceptual boundaries.",
-    audience: "Best for readers who want stronger precision without going fully specialist.",
-  },
-  Expert: {
-    order: 5,
-    summary: "Concise, dense, and nuance-aware.",
-    lens: "Focuses on technical framing, limitations, and the assumptions behind the system.",
-    audience: "Best for advanced readers who want compact language and sharper caveats.",
-  },
-};
-
-export type ConceptPosition = {
-  x: number;
-  y: number;
-};
-
-export type ConceptSource = {
+export type Source = {
   title: string;
   url: string;
+  appliesTo?: string;
+  note?: string;
 };
 
-export type DifficultyExplanations = Record<DifficultyLevel, string>;
-
-export type ConceptNode = {
+export type GlossaryTerm = {
   id: string;
-  title: string;
-  shortSummary: string;
-  icon: string;
-  position: ConceptPosition;
-  relatedNodeIds: string[];
-  example: string;
-  misconception: string;
-  difficultyExplanations: DifficultyExplanations;
-  sources: ConceptSource[];
+  term: string;
+  definition: string;
+  stageIds?: string[];
 };
+
+export type ConceptStatus = "draft" | "published";
+
+export type ExplainerType =
+  | "pipeline"
+  | "simulation"
+  | "comparison"
+  | "timeline"
+  | "layered-scene"
+  | "map";
 
 export type ConceptTheme = {
   accent: string;
   accentSecondary: string;
   glow: string;
+  canvas: string;
 };
 
-export type ConceptData = {
+export type VisualPosition = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
+export type VisualLayerTone = "neutral" | "accent" | "secondary" | "warning";
+
+export type VisualLayerKind =
+  | "input"
+  | "data"
+  | "process"
+  | "model"
+  | "output"
+  | "warning"
+  | "chip";
+
+export type VisualLayer = {
+  id: string;
+  label: string;
+  shortLabel: string;
+  kind: VisualLayerKind;
+  tone: VisualLayerTone;
+  position: VisualPosition;
+  description: string;
+};
+
+export type VisualConnection = {
+  id: string;
+  sourceLayerId: string;
+  targetLayerId: string;
+};
+
+export type Hotspot = {
+  id: string;
+  anchor: {
+    x: number;
+    y: number;
+  };
+  label: string;
+  body: string;
+  media?: string;
+  revealsInStages: string[];
+  relatedGlossaryTermIds?: string[];
+  tone?: VisualLayerTone;
+};
+
+export type StageMetricTone = "neutral" | "accent" | "warning";
+
+export type StageMetric = {
+  label: string;
+  value: string;
+  tone?: StageMetricTone;
+};
+
+export type StageStatePatch = {
+  highlightedLayerIds: string[];
+  spotlightHotspotIds?: string[];
+  outputLabel?: string;
+  note?: string;
+  metrics: StageMetric[];
+};
+
+export type Stage = {
+  id: string;
+  label: string;
+  goal: string;
+  headline: string;
+  body: string;
+  actionLabel: string;
+  visibleLayerIds: string[];
+  activeHotspotIds: string[];
+  statePatch: StageStatePatch;
+};
+
+export type CheckPoint = {
+  id: string;
+  prompt: string;
+  expectedInsight: string;
+  feedback: string;
+};
+
+export type BaseExplainer = {
+  id: string;
+  type: ExplainerType;
+  title: string;
+  summary: string;
+  intro: string;
+  defaultStageId?: string;
+  sources?: Source[];
+  glossary?: GlossaryTerm[];
+};
+
+export type PipelineExplainer = BaseExplainer & {
+  type: "pipeline";
+  heroKicker: string;
+  heroTitle: string;
+  heroSummary: string;
+  layers: VisualLayer[];
+  connections: VisualConnection[];
+  hotspots: Hotspot[];
+  stages: Stage[];
+  checkpoints?: CheckPoint[];
+};
+
+export type MapPosition = {
+  x: number;
+  y: number;
+};
+
+export type MapNode = {
+  id: string;
+  title: string;
+  shortSummary: string;
+  detail: string;
+  icon: string;
+  position: MapPosition;
+  relatedNodeIds: string[];
+  example: string;
+  misconception: string;
+  sources?: Source[];
+};
+
+export type MapExplainer = BaseExplainer & {
+  type: "map";
+  defaultNodeId: string;
+  nodes: MapNode[];
+};
+
+export type ConceptExplainer = PipelineExplainer | MapExplainer;
+
+export type Concept = {
   slug: string;
   title: string;
-  subtitle: string;
-  heroSummary: string;
-  defaultNodeId: string;
-  defaultDifficulty: DifficultyLevel;
-  learningObjectives: string[];
+  question: string;
+  summary: string;
+  thumbnail: string;
+  estimatedMinutes: number;
+  tags: string[];
+  status: ConceptStatus;
+  defaultExplainerId: string;
   theme: ConceptTheme;
-  sources: ConceptSource[];
-  nodes: ConceptNode[];
+  glossary: GlossaryTerm[];
+  sources: Source[];
+  explainers: ConceptExplainer[];
 };

@@ -7,7 +7,7 @@ type ConceptEmptyStateProps = {
 
 export function ConceptEmptyState({
   title = "This concept is not available yet.",
-  description = "The page structure is ready, but the local concept data is currently empty. Add nodes to render the interactive map and detail panel.",
+  description = "The page shell is ready, but this concept does not have enough local explainer data to render yet.",
 }: ConceptEmptyStateProps) {
   return (
     <section className="surface px-6 py-10 sm:px-8">

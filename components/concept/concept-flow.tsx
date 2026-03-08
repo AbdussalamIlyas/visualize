@@ -16,19 +16,18 @@ import {
   ConceptMapNode,
   type ConceptFlowNode,
 } from "@/components/concept/concept-map-node";
-import { Pill } from "@/components/ui/pill";
-import type { ConceptData } from "@/lib/concept-schema";
+import type { MapExplainer } from "@/lib/concept-schema";
 import {
   conceptCanvas,
   getConnections,
-  getDefaultNode,
+  getDefaultMapNode,
   getFocusNodeIds,
-  getNodeById,
+  getMapNodeById,
   toCanvasPosition,
 } from "@/lib/concept-utils";
 
 type ConceptFlowProps = {
-  concept: ConceptData;
+  explainer: MapExplainer;
   selectedNodeId: string;
   onSelectNode: (nodeId: string) => void;
   describedById?: string;
@@ -39,7 +38,7 @@ const nodeTypes = {
 } satisfies NodeTypes;
 
 export function ConceptFlow({
-  concept,
+  explainer,
   selectedNodeId,
   onSelectNode,
   describedById,
@@ -47,19 +46,20 @@ export function ConceptFlow({
   const shouldReduceMotion = useReducedMotion();
   const nodesInitialized = useNodesInitialized();
 
-  if (concept.nodes.length === 0) {
+  if (explainer.nodes.length === 0) {
     return (
       <ConceptEmptyState
-        description="The concept map cannot be rendered because there are no local nodes to display."
+        description="This secondary explainer does not have any map nodes to render yet."
         title="No map nodes are available."
       />
     );
   }
 
-  const selectedNode = getNodeById(concept, selectedNodeId) ?? getDefaultNode(concept);
+  const selectedNode =
+    getMapNodeById(explainer, selectedNodeId) ?? getDefaultMapNode(explainer);
   const focusIds = getFocusNodeIds(selectedNode);
 
-  const nodes: ConceptFlowNode[] = concept.nodes.map((node) => ({
+  const nodes: ConceptFlowNode[] = explainer.nodes.map((node) => ({
     id: node.id,
     type: "concept",
     position: toCanvasPosition(node.position),
@@ -78,7 +78,7 @@ export function ConceptFlow({
     focusable: false,
   }));
 
-  const edges: Edge[] = getConnections(concept).map((connection) => {
+  const edges: Edge[] = getConnections(explainer).map((connection) => {
     const isDirect =
       connection.source === selectedNode.id || connection.target === selectedNode.id;
     const isWithinFocus =
@@ -115,18 +115,11 @@ export function ConceptFlow({
       transition={{ duration: shouldReduceMotion ? 0 : 0.45, ease: "easeOut" }}
     >
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 px-5 py-4 sm:px-6">
-        <div className="space-y-3">
+        <div className="space-y-2">
           <h2 className="section-eyebrow" id="concept-map-title">
             Concept Map
           </h2>
-          <p className="mt-1 text-sm text-[var(--color-muted)]">
-            Click a node to inspect its explanation and related ideas.
-          </p>
-          <div className="flex flex-wrap gap-2 text-xs">
-            <Pill tone="accent">Selected</Pill>
-            <Pill>Linked</Pill>
-            <Pill>Context</Pill>
-          </div>
+          <p className="text-sm text-[var(--color-muted)]">Tap nodes. Drag to inspect.</p>
         </div>
         <motion.div
           animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
@@ -144,7 +137,7 @@ export function ConceptFlow({
           update the detail panel. On touch devices, drag to inspect the map.
         </p>
         <ReactFlow
-          aria-label="How AI works concept map"
+          aria-label={`${explainer.title} view`}
           aria-describedby={
             describedById
               ? `${describedById} concept-map-instructions`
@@ -160,6 +153,7 @@ export function ConceptFlow({
           maxZoom={1.35}
           minZoom={0.64}
           nodeOrigin={[0.5, 0.5]}
+          nodeTypes={nodeTypes}
           nodes={nodes}
           nodesConnectable={false}
           nodesDraggable={false}
@@ -171,7 +165,6 @@ export function ConceptFlow({
           ]}
           zoomOnDoubleClick={false}
           zoomOnScroll={false}
-          nodeTypes={nodeTypes}
         >
           <Background
             color="rgba(255,255,255,0.08)"
@@ -193,15 +186,12 @@ export function ConceptFlow({
               <div className="surface-muted flex items-center gap-3 px-4 py-3">
                 <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-[var(--color-accent)]" />
                 <span className="text-sm text-[var(--color-muted)]">
-                  Loading concept map...
+                  Loading map...
                 </span>
               </div>
             </motion.div>
           ) : null}
         </AnimatePresence>
-        <div className="pointer-events-none absolute bottom-4 left-4 rounded-full border border-white/10 bg-[rgba(8,12,24,0.7)] px-3 py-2 text-[0.68rem] uppercase tracking-[0.16em] text-[var(--color-muted)] backdrop-blur sm:bottom-5 sm:left-5">
-          Drag to inspect. Tap nodes to focus.
-        </div>
       </div>
     </motion.section>
   );

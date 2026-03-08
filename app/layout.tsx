@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     template: "%s | Visualize",
   },
   description:
-    "A dark-mode-first interactive learning experience for understanding complex ideas visually, starting with how AI works.",
+    "A visual-first learning experience for understanding complex ideas through explainer pages, starting with how a jet engine works.",
 };
 
 type RootLayoutProps = {

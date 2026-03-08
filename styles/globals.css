@@ -49,6 +49,14 @@
     text-decoration: none;
   }
 
+  .details-reset > summary {
+    list-style: none;
+  }
+
+  .details-reset > summary::-webkit-details-marker {
+    display: none;
+  }
+
   ::selection {
     background: rgba(143, 181, 255, 0.3);
     color: white;

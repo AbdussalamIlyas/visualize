@@ -1,10 +1,16 @@
 import type {
-  ConceptData,
-  ConceptNode,
-  DifficultyLevel,
-  ConceptPosition,
+  Concept,
+  ConceptExplainer,
+  GlossaryTerm,
+  Hotspot,
+  MapExplainer,
+  MapNode,
+  MapPosition,
+  PipelineExplainer,
+  Source,
+  Stage,
+  VisualLayer,
 } from "@/lib/concept-schema";
-import { difficultyLevels } from "@/lib/concept-schema";
 
 type ConnectionPair = {
   source: string;
@@ -23,35 +29,103 @@ export const conceptCanvas = {
   height: 760,
 } as const;
 
-export function getDefaultDifficulty(concept: ConceptData): DifficultyLevel {
-  return concept.defaultDifficulty ?? difficultyLevels[2];
+export function getExplainerById(
+  concept: Concept,
+  explainerId: string,
+): ConceptExplainer | undefined {
+  return concept.explainers.find((explainer) => explainer.id === explainerId);
 }
 
-export function getNodeById(
-  concept: ConceptData,
+export function getDefaultExplainer(concept: Concept): ConceptExplainer {
+  return (
+    getExplainerById(concept, concept.defaultExplainerId) ?? concept.explainers[0]
+  );
+}
+
+export function getPipelineStageById(
+  explainer: PipelineExplainer,
+  stageId: string,
+): Stage | undefined {
+  return explainer.stages.find((stage) => stage.id === stageId);
+}
+
+export function getDefaultPipelineStage(explainer: PipelineExplainer): Stage {
+  return (
+    getPipelineStageById(explainer, explainer.defaultStageId ?? "") ??
+    explainer.stages[0]
+  );
+}
+
+export function getLayerById(
+  explainer: PipelineExplainer,
+  layerId: string,
+): VisualLayer | undefined {
+  return explainer.layers.find((layer) => layer.id === layerId);
+}
+
+export function getVisibleLayers(
+  explainer: PipelineExplainer,
+  stage: Stage,
+): VisualLayer[] {
+  const visibleIds = new Set(stage.visibleLayerIds);
+
+  return explainer.layers.filter((layer) => visibleIds.has(layer.id));
+}
+
+export function getHotspotById(
+  explainer: PipelineExplainer,
+  hotspotId: string,
+): Hotspot | undefined {
+  return explainer.hotspots.find((hotspot) => hotspot.id === hotspotId);
+}
+
+export function getStageHotspots(
+  explainer: PipelineExplainer,
+  stage: Stage,
+): Hotspot[] {
+  return stage.activeHotspotIds
+    .map((hotspotId) => getHotspotById(explainer, hotspotId))
+    .filter((hotspot): hotspot is Hotspot => {
+      if (!hotspot) {
+        return false;
+      }
+
+      return hotspot.revealsInStages.includes(stage.id);
+    });
+}
+
+export function getDefaultHotspotId(
+  explainer: PipelineExplainer,
+  stage: Stage,
+): string | null {
+  return getStageHotspots(explainer, stage)[0]?.id ?? null;
+}
+
+export function getMapNodeById(
+  explainer: MapExplainer,
   nodeId: string,
-): ConceptNode | undefined {
-  return concept.nodes.find((node) => node.id === nodeId);
+): MapNode | undefined {
+  return explainer.nodes.find((node) => node.id === nodeId);
 }
 
-export function getDefaultNode(concept: ConceptData): ConceptNode {
-  return getNodeById(concept, concept.defaultNodeId) ?? concept.nodes[0];
+export function getDefaultMapNode(explainer: MapExplainer): MapNode {
+  return getMapNodeById(explainer, explainer.defaultNodeId) ?? explainer.nodes[0];
 }
 
-export function getRelatedNodes(
-  concept: ConceptData,
-  node: ConceptNode,
-): ConceptNode[] {
+export function getRelatedMapNodes(
+  explainer: MapExplainer,
+  node: MapNode,
+): MapNode[] {
   const relatedIds = new Set(node.relatedNodeIds);
 
-  return concept.nodes.filter((candidate) => relatedIds.has(candidate.id));
+  return explainer.nodes.filter((candidate) => relatedIds.has(candidate.id));
 }
 
-export function getFocusNodeIds(node: ConceptNode): Set<string> {
+export function getFocusNodeIds(node: MapNode): Set<string> {
   return new Set([node.id, ...node.relatedNodeIds]);
 }
 
-export function toCanvasPosition(position: ConceptPosition) {
+export function toCanvasPosition(position: MapPosition) {
   return {
     x: (position.x / 100) * conceptCanvas.width,
     y: (position.y / 100) * conceptCanvas.height,
@@ -59,8 +133,8 @@ export function toCanvasPosition(position: ConceptPosition) {
 }
 
 export function getHandleForDirection(
-  source: ConceptPosition,
-  target: ConceptPosition,
+  source: MapPosition,
+  target: MapPosition,
 ): {
   sourceHandle: ConceptHandleSide;
   targetHandle: ConceptHandleSide;
@@ -79,11 +153,11 @@ export function getHandleForDirection(
     : { sourceHandle: "top", targetHandle: "bottom" };
 }
 
-export function getConnectionPairs(concept: ConceptData): ConnectionPair[] {
+export function getConnectionPairs(explainer: MapExplainer): ConnectionPair[] {
   const seen = new Set<string>();
   const pairs: ConnectionPair[] = [];
 
-  concept.nodes.forEach((node) => {
+  explainer.nodes.forEach((node) => {
     node.relatedNodeIds.forEach((relatedId) => {
       const [source, target] = [node.id, relatedId].sort();
       const key = `${source}:${target}`;
@@ -98,11 +172,11 @@ export function getConnectionPairs(concept: ConceptData): ConnectionPair[] {
   return pairs;
 }
 
-export function getConnections(concept: ConceptData): ConceptConnection[] {
-  return getConnectionPairs(concept)
+export function getConnections(explainer: MapExplainer): ConceptConnection[] {
+  return getConnectionPairs(explainer)
     .map((pair) => {
-      const sourceNode = getNodeById(concept, pair.source);
-      const targetNode = getNodeById(concept, pair.target);
+      const sourceNode = getMapNodeById(explainer, pair.source);
+      const targetNode = getMapNodeById(explainer, pair.target);
 
       if (!sourceNode || !targetNode) {
         return null;
@@ -114,4 +188,30 @@ export function getConnections(concept: ConceptData): ConceptConnection[] {
       };
     })
     .filter((connection): connection is ConceptConnection => connection !== null);
+}
+
+export function getCombinedSources(
+  concept: Concept,
+  explainer: ConceptExplainer,
+): Source[] {
+  const sourceMap = new Map<string, Source>();
+
+  [...concept.sources, ...(explainer.sources ?? [])].forEach((source) => {
+    sourceMap.set(source.url, source);
+  });
+
+  return [...sourceMap.values()];
+}
+
+export function getCombinedGlossary(
+  concept: Concept,
+  explainer: ConceptExplainer,
+): GlossaryTerm[] {
+  const glossaryMap = new Map<string, GlossaryTerm>();
+
+  [...concept.glossary, ...(explainer.glossary ?? [])].forEach((term) => {
+    glossaryMap.set(term.id, term);
+  });
+
+  return [...glossaryMap.values()];
 }

@@ -1,190 +1,112 @@
 "use client";
 
-import { ReactFlowProvider } from "@xyflow/react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import { startTransition, useState } from "react";
 
-import { ConceptDetailPanel } from "@/components/concept/concept-detail-panel";
 import { ConceptEmptyState } from "@/components/concept/concept-empty-state";
-import { ConceptFlow } from "@/components/concept/concept-flow";
-import { DifficultySwitcher } from "@/components/concept/difficulty-switcher";
+import { ExplainerSwitcher } from "@/components/concept/explainer-switcher";
+import { MapExplainerView } from "@/components/concept/map-explainer";
+import { PipelineExplainerView } from "@/components/concept/pipeline-explainer";
+import { SupportPanels } from "@/components/concept/support-panels";
 import { Container } from "@/components/ui/container";
 import { Pill } from "@/components/ui/pill";
-import type { ConceptData } from "@/lib/concept-schema";
+import type { Concept } from "@/lib/concept-schema";
 import {
-  getDefaultDifficulty,
-  getDefaultNode,
-  getNodeById,
-  getRelatedNodes,
+  getCombinedGlossary,
+  getCombinedSources,
+  getDefaultExplainer,
+  getExplainerById,
 } from "@/lib/concept-utils";
 
 type ConceptExplorerProps = {
-  concept: ConceptData;
+  concept: Concept;
 };
 
 export function ConceptExplorer({ concept }: ConceptExplorerProps) {
-  const shouldReduceMotion = useReducedMotion();
-  const hasNodes = concept.nodes.length > 0;
-  const [selectedNodeId, setSelectedNodeId] = useState(
-    () => concept.nodes[0]?.id ?? concept.defaultNodeId,
+  const hasExplainers = concept.explainers.length > 0;
+  const [selectedExplainerId, setSelectedExplainerId] = useState(
+    () => concept.defaultExplainerId,
   );
-  const [difficulty, setDifficulty] = useState(() => getDefaultDifficulty(concept));
 
-  if (!hasNodes) {
+  if (!hasExplainers) {
     return (
       <div className="pb-20 pt-14 sm:pb-24 sm:pt-20">
         <Container>
-          <ConceptEmptyState />
+          <ConceptEmptyState
+            description="The page shell is ready, but this concept does not have an explainer attached yet."
+            title="No explainer is available yet."
+          />
         </Container>
       </div>
     );
   }
 
-  const selectedNode = getNodeById(concept, selectedNodeId) ?? getDefaultNode(concept);
-  const relatedNodes = getRelatedNodes(concept, selectedNode);
+  const selectedExplainer =
+    getExplainerById(concept, selectedExplainerId) ?? getDefaultExplainer(concept);
+  const sources = getCombinedSources(concept, selectedExplainer);
+  const glossary = getCombinedGlossary(concept, selectedExplainer);
 
-  function handleSelectNode(nodeId: string) {
-    if (nodeId === selectedNode.id) {
+  function handleSelectExplainer(explainerId: string) {
+    if (explainerId === selectedExplainer.id) {
       return;
     }
 
     startTransition(() => {
-      setSelectedNodeId(nodeId);
-    });
-  }
-
-  function handleDifficultyChange(nextDifficulty: typeof difficulty) {
-    if (nextDifficulty === difficulty) {
-      return;
-    }
-
-    startTransition(() => {
-      setDifficulty(nextDifficulty);
+      setSelectedExplainerId(explainerId);
     });
   }
 
   return (
-    <div className="pb-20 pt-14 sm:pb-24 sm:pt-20">
-      <Container className="space-y-6 sm:space-y-8">
+    <div className="pb-16 pt-10 sm:pb-24 sm:pt-14">
+      <Container className="space-y-6">
         <p aria-live="polite" className="sr-only">
-          {`Focused node ${selectedNode.title}. Difficulty level ${difficulty}.`}
+          {`Current explainer ${selectedExplainer.title}.`}
         </p>
+
         <motion.section
-          animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
-          aria-labelledby="concept-title"
-          className="surface overflow-hidden px-6 py-8 sm:px-8 sm:py-10"
-          initial={shouldReduceMotion ? false : { opacity: 0, y: 18 }}
-          transition={{ duration: shouldReduceMotion ? 0 : 0.4, ease: "easeOut" }}
+          animate={{ opacity: 1, y: 0 }}
+          className="surface overflow-hidden px-5 py-5 sm:px-8 sm:py-6"
+          initial={{ opacity: 0, y: 16 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
         >
-          <div className="grid gap-8 2xl:grid-cols-[minmax(0,1fr)_20rem] 2xl:items-end">
-            <div className="space-y-5">
-              <Pill tone="accent">Interactive Concept Explorer</Pill>
-              <div className="space-y-4">
-                <h1
-                  className="font-[family:var(--font-display)] text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl"
-                  id="concept-title"
-                >
-                  {concept.title}
-                </h1>
-                <p
-                  className="max-w-3xl text-lg leading-8 text-[var(--color-muted)]"
-                  id="concept-subtitle"
-                >
-                  {concept.subtitle}
-                </p>
-                <p className="max-w-3xl text-sm leading-7 text-[var(--color-muted)] sm:text-base">
-                  {concept.heroSummary}
-                </p>
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-3xl space-y-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <Pill tone="accent">Interactive concept</Pill>
+                <Pill>{`${concept.estimatedMinutes} min`}</Pill>
               </div>
+              <h1 className="font-[family:var(--font-display)] text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+                {concept.title}
+              </h1>
+              <p className="text-lg leading-8 text-white">{concept.question}</p>
             </div>
-            <div className="grid gap-3 sm:grid-cols-3 2xl:grid-cols-1">
-              <div className="surface-muted p-5">
-                <p className="text-xs uppercase tracking-[0.16em] text-[var(--color-accent)]">
-                  Nodes
-                </p>
-                <p className="mt-2 text-3xl font-semibold text-white">
-                  {concept.nodes.length}
-                </p>
-              </div>
-              <div className="surface-muted p-5">
-                <p className="text-xs uppercase tracking-[0.16em] text-[var(--color-accent)]">
-                  Current node
-                </p>
-                <AnimatePresence mode="wait">
-                  <motion.p
-                    key={selectedNode.id}
-                    animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
-                    className="mt-2 text-xl font-semibold text-white"
-                    exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
-                    initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 8 }}
-                    transition={{ duration: shouldReduceMotion ? 0 : 0.18, ease: "easeOut" }}
-                  >
-                    {selectedNode.title}
-                  </motion.p>
-                </AnimatePresence>
-              </div>
-              <div className="surface-muted p-5">
-                <p className="text-xs uppercase tracking-[0.16em] text-[var(--color-accent)]">
-                  Current level
-                </p>
-                <AnimatePresence mode="wait">
-                  <motion.p
-                    key={difficulty}
-                    animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
-                    className="mt-2 text-xl font-semibold text-white"
-                    exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
-                    initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 8 }}
-                    transition={{ duration: shouldReduceMotion ? 0 : 0.18, ease: "easeOut" }}
-                  >
-                    {difficulty}
-                  </motion.p>
-                </AnimatePresence>
-                <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">
-                  Local-only content, no auth or database.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="mt-8 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-            {concept.learningObjectives.map((objective) => (
-              <article
-                key={objective}
-                className="rounded-[1.35rem] border border-white/10 bg-white/[0.03] px-4 py-4 text-sm leading-6 text-[var(--color-muted)]"
-              >
-                {objective}
-              </article>
-            ))}
+            <p className="text-sm text-[var(--color-muted)] lg:max-w-sm">
+              Walkthrough first. Map second.
+            </p>
           </div>
         </motion.section>
 
-        <DifficultySwitcher onChange={handleDifficultyChange} value={difficulty} />
+        <ExplainerSwitcher
+          explainers={concept.explainers}
+          onChange={handleSelectExplainer}
+          value={selectedExplainer.id}
+        />
+      </Container>
 
-        <ReactFlowProvider>
-          <motion.div
-            animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
-            className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(20rem,25rem)] 2xl:grid-cols-[minmax(0,1.15fr)_minmax(22rem,27rem)]"
-            initial={shouldReduceMotion ? false : { opacity: 0, y: 18 }}
-            transition={{
-              delay: shouldReduceMotion ? 0 : 0.08,
-              duration: shouldReduceMotion ? 0 : 0.42,
-              ease: "easeOut",
-            }}
-          >
-            <ConceptFlow
-              concept={concept}
-              describedById="concept-subtitle"
-              onSelectNode={handleSelectNode}
-              selectedNodeId={selectedNode.id}
-            />
-            <ConceptDetailPanel
-              concept={concept}
-              difficulty={difficulty}
-              node={selectedNode}
-              onSelectNode={handleSelectNode}
-              relatedNodes={relatedNodes}
-            />
-          </motion.div>
-        </ReactFlowProvider>
+      {selectedExplainer.type === "pipeline" ? (
+        <PipelineExplainerView explainer={selectedExplainer} />
+      ) : (
+        <Container className="mt-6">
+          <MapExplainerView explainer={selectedExplainer} />
+        </Container>
+      )}
+
+      <Container className="mt-6">
+        <SupportPanels
+          currentViewLabel={selectedExplainer.title}
+          glossary={glossary}
+          sources={sources}
+        />
       </Container>
     </div>
   );

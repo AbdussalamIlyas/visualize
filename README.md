@@ -1,6 +1,6 @@
 # Visualize
 
-Interactive educational MVP for explaining **How AI Works** through a clickable concept map, five difficulty levels, and a dark-mode-first UI.
+Interactive educational MVP for explaining complex systems through one-page visual explainers. The current flagship route teaches **How a Jet Engine Works**, with starter routes for AI and transistor learning.
 
 ## Stack
 
@@ -38,4 +38,6 @@ npm run dev
 
 - `/` - landing page
 - `/about` - project context
-- `/concept/how-ai-works` - interactive concept explainer
+- `/concept/how-a-jet-engine-works` - flagship jet engine explainer
+- `/concept/how-ai-works` - starter AI walkthrough with a supporting concept map
+- `/concept/how-a-transistor-works` - starter transistor route

@@ -10,7 +10,7 @@ import { cx } from "@/lib/utils";
 const navigation = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
-  { href: "/concept/how-ai-works", label: "How AI Works" },
+  { href: "/concept/how-a-jet-engine-works", label: "Jet Engine" },
 ];
 
 export function SiteHeader() {
@@ -23,13 +23,8 @@ export function SiteHeader() {
           <span className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-sm font-semibold tracking-[0.2em] text-[var(--color-accent)] transition-transform duration-300 group-hover:scale-105">
             VX
           </span>
-          <div>
-            <div className="font-[family:var(--font-display)] text-lg font-semibold">
-              Visualize
-            </div>
-            <div className="text-xs text-[var(--color-muted)]">
-              Interactive concept explorer
-            </div>
+          <div className="font-[family:var(--font-display)] text-lg font-semibold">
+            Visualize
           </div>
         </Link>
         <div className="flex flex-wrap items-center gap-3">
@@ -57,8 +52,8 @@ export function SiteHeader() {
               );
             })}
           </nav>
-          <LinkButton href="/concept/how-ai-works" size="sm">
-            Open explainer
+          <LinkButton href="/concept/how-a-jet-engine-works" size="sm">
+            Open flagship
           </LinkButton>
         </div>
       </Container>

@@ -6,7 +6,7 @@ import { howAiWorksConcept } from "@/data/how-ai-works";
 export const metadata: Metadata = {
   title: "How AI Works",
   description:
-    "Explore how AI works through a clickable concept map, local concept data, and layered difficulty-based explanations.",
+    "Explore how AI works through a six-stage interactive walkthrough with a supporting concept map.",
 };
 
 export default function HowAiWorksPage() {
