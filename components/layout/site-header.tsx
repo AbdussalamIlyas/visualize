@@ -5,12 +5,16 @@ import { usePathname } from "next/navigation";
 
 import { Container } from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/link-button";
+import {
+  conceptGalleryEntries,
+  featuredConceptEntry,
+} from "@/data/concept-gallery";
 import { cx } from "@/lib/utils";
 
 const navigation = [
   { href: "/", label: "Home" },
+  { href: "/#concept-library", label: "Library" },
   { href: "/about", label: "About" },
-  { href: "/concept/how-a-jet-engine-works", label: "Jet Engine" },
 ];
 
 export function SiteHeader() {
@@ -30,10 +34,12 @@ export function SiteHeader() {
         <div className="flex flex-wrap items-center gap-3">
           <nav aria-label="Primary" className="flex flex-wrap items-center gap-2">
             {navigation.map((item) => {
+              const isHashLink = item.href.includes("#");
               const isActive =
-                item.href === "/"
+                !isHashLink &&
+                (item.href === "/"
                   ? pathname === item.href
-                  : pathname.startsWith(item.href);
+                  : pathname.startsWith(item.href));
 
               return (
                 <Link
@@ -52,8 +58,11 @@ export function SiteHeader() {
               );
             })}
           </nav>
-          <LinkButton href="/concept/how-a-jet-engine-works" size="sm">
-            Open flagship
+          <div className="hidden rounded-full border border-white/10 bg-white/[0.03] px-3 py-2 text-xs uppercase tracking-[0.16em] text-[var(--color-muted)] lg:block">
+            {`${conceptGalleryEntries.length} concepts`}
+          </div>
+          <LinkButton href={featuredConceptEntry.href} size="sm">
+            Open featured
           </LinkButton>
         </div>
       </Container>

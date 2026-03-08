@@ -1,8 +1,11 @@
+import { ConceptPageHero } from "@/components/concept/concept-page-hero";
+import { MoreConcepts } from "@/components/concept/more-concepts";
 import { Container } from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/link-button";
-import { Pill } from "@/components/ui/pill";
+import type { ConceptTheme } from "@/lib/concept-schema";
 
 type ConceptStarterPageProps = {
+  slug: string;
   title: string;
   question: string;
   summary: string;
@@ -10,44 +13,47 @@ type ConceptStarterPageProps = {
   tags: string[];
   plannedStages: string[];
   starterNote: string;
+  theme?: ConceptTheme;
 };
 
 export function ConceptStarterPage({
+  slug,
   title,
   question,
+  summary,
   estimatedMinutes,
+  tags,
   plannedStages,
   starterNote,
+  theme,
 }: ConceptStarterPageProps) {
   return (
     <div className="pb-20 pt-14 sm:pb-24 sm:pt-20">
       <Container className="space-y-6">
-        <section className="surface overflow-hidden px-6 py-8 sm:px-8 sm:py-10">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-3xl space-y-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <Pill tone="accent">Starter route</Pill>
-                <Pill>{`${estimatedMinutes} min target`}</Pill>
-              </div>
-              <h1 className="font-[family:var(--font-display)] text-4xl font-semibold tracking-tight text-white sm:text-5xl">
-                {title}
-              </h1>
-              <p className="text-lg leading-8 text-white">{question}</p>
-            </div>
-            <div className="rounded-[1.35rem] border border-white/10 bg-white/[0.03] px-4 py-3 text-sm leading-6 text-[var(--color-muted)] lg:max-w-sm">
-              {starterNote}
-            </div>
-          </div>
-        </section>
+        <ConceptPageHero
+          eyebrow="Starter route"
+          minutes={estimatedMinutes}
+          note={starterNote}
+          question={question}
+          summary={summary}
+          tags={tags}
+          theme={theme}
+          title={title}
+        />
 
-        <section className="surface px-6 py-8 sm:px-8">
+        <section className="surface overflow-hidden px-6 py-8 sm:px-8">
           <div className="space-y-5">
             <div className="space-y-2">
               <p className="section-eyebrow">Planned flow</p>
               <h2 className="font-[family:var(--font-display)] text-3xl font-semibold tracking-tight text-white">
                 Starter route only.
               </h2>
+              <p className="max-w-2xl text-sm leading-7 text-[var(--color-muted)] sm:text-base">
+                The concept is scoped and staged, but the full visual interaction is
+                still to come.
+              </p>
             </div>
+
             <div className="grid gap-4 md:grid-cols-2">
               {plannedStages.map((stage, index) => (
                 <article
@@ -61,16 +67,19 @@ export function ConceptStarterPage({
                 </article>
               ))}
             </div>
+
             <div className="flex flex-wrap gap-3">
               <LinkButton href="/concept/how-a-jet-engine-works">
                 Open the flagship jet engine explainer
               </LinkButton>
               <LinkButton href="/concept/how-ai-works" variant="secondary">
-                Open the AI starter concept
+                Open the AI explainer
               </LinkButton>
             </div>
           </div>
         </section>
+
+        <MoreConcepts currentHref={`/concept/${slug}`} />
       </Container>
     </div>
   );

@@ -3,6 +3,8 @@
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { startTransition, useState } from "react";
 
+import { ConceptPageHero } from "@/components/concept/concept-page-hero";
+import { MoreConcepts } from "@/components/concept/more-concepts";
 import { SupportPanels } from "@/components/concept/support-panels";
 import { Container } from "@/components/ui/container";
 import { Pill } from "@/components/ui/pill";
@@ -159,25 +161,16 @@ export function JetEnginePage() {
   return (
     <div className="pb-16 pt-10 sm:pb-24 sm:pt-14">
       <Container className="space-y-4">
-        <section className="surface overflow-hidden px-5 py-6 sm:px-8 sm:py-8">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-3xl space-y-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <Pill tone="accent">Finished flagship</Pill>
-                <Pill>{`${jetEngineConcept.estimatedMinutes} min`}</Pill>
-              </div>
-              <h1 className="font-[family:var(--font-display)] text-4xl font-semibold tracking-tight text-white sm:text-5xl">
-                {jetEngineConcept.title}
-              </h1>
-              <p className="text-lg leading-8 text-white">
-                {jetEngineConcept.question}
-              </p>
-            </div>
-            <p className="text-sm text-[var(--color-muted)] lg:max-w-sm">
-              Stage chips first. Hotspots second.
-            </p>
-          </div>
-        </section>
+        <ConceptPageHero
+          eyebrow="Finished flagship"
+          minutes={jetEngineConcept.estimatedMinutes}
+          note="Stage chips first. Hotspots second."
+          question={jetEngineConcept.question}
+          summary={jetEngineConcept.summary}
+          tags={jetEngineConcept.tags}
+          theme={jetEngineConcept.theme}
+          title={jetEngineConcept.title}
+        />
 
         <section className="surface px-4 py-4 sm:px-6">
           <div className="space-y-3">
@@ -460,12 +453,13 @@ export function JetEnginePage() {
         </div>
       </div>
 
-      <Container className="mt-6">
+      <Container className="mt-6 space-y-8">
         <SupportPanels
           currentViewLabel="Jet engine walkthrough"
           glossary={jetEngineConcept.glossary}
           sources={jetEngineConcept.sources}
         />
+        <MoreConcepts currentHref={`/concept/${jetEngineConcept.slug}`} />
       </Container>
     </div>
   );

@@ -1,15 +1,15 @@
 "use client";
 
-import { motion } from "motion/react";
 import { startTransition, useState } from "react";
 
 import { ConceptEmptyState } from "@/components/concept/concept-empty-state";
+import { ConceptPageHero } from "@/components/concept/concept-page-hero";
 import { ExplainerSwitcher } from "@/components/concept/explainer-switcher";
 import { MapExplainerView } from "@/components/concept/map-explainer";
+import { MoreConcepts } from "@/components/concept/more-concepts";
 import { PipelineExplainerView } from "@/components/concept/pipeline-explainer";
 import { SupportPanels } from "@/components/concept/support-panels";
 import { Container } from "@/components/ui/container";
-import { Pill } from "@/components/ui/pill";
 import type { Concept } from "@/lib/concept-schema";
 import {
   getCombinedGlossary,
@@ -41,6 +41,7 @@ export function ConceptExplorer({ concept }: ConceptExplorerProps) {
     );
   }
 
+  const hasMultipleExplainers = concept.explainers.length > 1;
   const selectedExplainer =
     getExplainerById(concept, selectedExplainerId) ?? getDefaultExplainer(concept);
   const sources = getCombinedSources(concept, selectedExplainer);
@@ -63,50 +64,45 @@ export function ConceptExplorer({ concept }: ConceptExplorerProps) {
           {`Current explainer ${selectedExplainer.title}.`}
         </p>
 
-        <motion.section
-          animate={{ opacity: 1, y: 0 }}
-          className="surface overflow-hidden px-5 py-5 sm:px-8 sm:py-6"
-          initial={{ opacity: 0, y: 16 }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
-        >
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-3xl space-y-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <Pill tone="accent">Interactive concept</Pill>
-                <Pill>{`${concept.estimatedMinutes} min`}</Pill>
-              </div>
-              <h1 className="font-[family:var(--font-display)] text-4xl font-semibold tracking-tight text-white sm:text-5xl">
-                {concept.title}
-              </h1>
-              <p className="text-lg leading-8 text-white">{concept.question}</p>
-            </div>
-            <p className="text-sm text-[var(--color-muted)] lg:max-w-sm">
-              Walkthrough first. Map second.
-            </p>
-          </div>
-        </motion.section>
-
-        <ExplainerSwitcher
-          explainers={concept.explainers}
-          onChange={handleSelectExplainer}
-          value={selectedExplainer.id}
+        <ConceptPageHero
+          eyebrow="Interactive concept"
+          minutes={concept.estimatedMinutes}
+          note={
+            hasMultipleExplainers
+              ? "Use the guided walkthrough first. Switch views only when you want the supporting vocabulary map."
+              : "Use the stage rail and hotspots first. Sources and glossary stay secondary on purpose."
+          }
+          question={concept.question}
+          summary={concept.summary}
+          tags={concept.tags}
+          theme={concept.theme}
+          title={concept.title}
         />
+
+        {hasMultipleExplainers ? (
+          <ExplainerSwitcher
+            explainers={concept.explainers}
+            onChange={handleSelectExplainer}
+            value={selectedExplainer.id}
+          />
+        ) : null}
       </Container>
 
       {selectedExplainer.type === "pipeline" ? (
-        <PipelineExplainerView explainer={selectedExplainer} />
+        <PipelineExplainerView explainer={selectedExplainer} theme={concept.theme} />
       ) : (
         <Container className="mt-6">
           <MapExplainerView explainer={selectedExplainer} />
         </Container>
       )}
 
-      <Container className="mt-6">
+      <Container className="mt-6 space-y-8">
         <SupportPanels
           currentViewLabel={selectedExplainer.title}
           glossary={glossary}
           sources={sources}
         />
+        <MoreConcepts currentHref={`/concept/${concept.slug}`} />
       </Container>
     </div>
   );

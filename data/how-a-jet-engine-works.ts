@@ -191,6 +191,13 @@ export const jetEngineConcept = {
   question: "How does a jet engine turn air, fuel, and heat into thrust?",
   summary:
     "A one-page visual explainer of a turbofan engine, from intake to exhaust.",
+  theme: {
+    accent: "#9ac3ff",
+    accentSecondary: "#5ee2c8",
+    glow: "rgba(154, 195, 255, 0.18)",
+    canvas:
+      "radial-gradient(circle at 18% 18%, rgba(154,195,255,0.2), rgba(154,195,255,0) 34%), radial-gradient(circle at 82% 26%, rgba(94,226,200,0.14), rgba(94,226,200,0) 28%), linear-gradient(180deg, rgba(7,11,24,0.98), rgba(6,10,20,0.96))",
+  },
   estimatedMinutes: 4,
   tags: ["Flight", "Physics", "Mechanical Systems", "Interactive"],
   glossary: jetEngineGlossary,

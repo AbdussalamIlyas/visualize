@@ -5,6 +5,7 @@ import { startTransition, useState } from "react";
 
 import { Pill } from "@/components/ui/pill";
 import type {
+  ConceptTheme,
   Hotspot,
   PipelineExplainer,
   StageMetricTone,
@@ -24,6 +25,7 @@ import { cx } from "@/lib/utils";
 
 type PipelineExplainerProps = {
   explainer: PipelineExplainer;
+  theme?: ConceptTheme;
 };
 
 function toneClasses(tone: VisualLayerTone, isActive: boolean) {
@@ -84,7 +86,10 @@ function getLayerCenter(layer: VisualLayer) {
   };
 }
 
-export function PipelineExplainerView({ explainer }: PipelineExplainerProps) {
+export function PipelineExplainerView({
+  explainer,
+  theme,
+}: PipelineExplainerProps) {
   const shouldReduceMotion = useReducedMotion();
   const initialStage = getDefaultPipelineStage(explainer);
   const [stageId, setStageId] = useState(initialStage.id);
@@ -147,16 +152,27 @@ export function PipelineExplainerView({ explainer }: PipelineExplainerProps) {
           <div className="surface overflow-hidden p-4 sm:p-6 lg:p-7">
             <div className="grid gap-6 xl:grid-cols-[minmax(0,1.62fr)_minmax(19rem,23rem)] xl:items-start">
               <div className="space-y-4">
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Pill tone="accent">{explainer.heroKicker}</Pill>
-                    <p className="text-sm text-[var(--color-muted)]">
-                      Tap a stage or hotspot.
+                <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,20rem)] lg:items-start">
+                  <div className="space-y-3">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Pill tone="accent">{explainer.heroKicker}</Pill>
+                      <Pill>{`${explainer.stages.length} stages`}</Pill>
+                    </div>
+                    <div className="space-y-2">
+                      <h2 className="font-[family:var(--font-display)] text-3xl font-semibold tracking-tight text-white">
+                        {explainer.heroTitle}
+                      </h2>
+                      <p className="max-w-2xl text-sm leading-6 text-[var(--color-muted)] sm:text-base">
+                        {explainer.heroSummary}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="rounded-[1.35rem] border border-white/10 bg-white/[0.03] px-4 py-4">
+                    <p className="section-eyebrow">Current cue</p>
+                    <p className="mt-3 text-sm leading-6 text-[var(--color-muted)]">
+                      {currentStage.actionLabel}
                     </p>
                   </div>
-                  <p className="text-sm text-[var(--color-muted)]">
-                    Cue: {currentStage.actionLabel}
-                  </p>
                 </div>
 
                 <div
@@ -205,6 +221,12 @@ export function PipelineExplainerView({ explainer }: PipelineExplainerProps) {
                 </div>
 
                 <div className="relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-[linear-gradient(180deg,rgba(8,12,24,0.96),rgba(5,8,18,0.98))]">
+                  {theme ? (
+                    <div
+                      className="absolute inset-0 opacity-80"
+                      style={{ backgroundImage: theme.canvas }}
+                    />
+                  ) : null}
                   <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:24px_24px]" />
                   <div className="relative aspect-[16/11] sm:aspect-[16/9]">
                     <svg

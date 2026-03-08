@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { Container } from "@/components/ui/container";
+import { featuredConceptEntry } from "@/data/concept-gallery";
 
 export function SiteFooter() {
   return (
@@ -18,14 +19,14 @@ export function SiteFooter() {
           <Link className="transition hover:text-white" href="/">
             Home
           </Link>
+          <Link className="transition hover:text-white" href="/#concept-library">
+            Library
+          </Link>
           <Link className="transition hover:text-white" href="/about">
             About
           </Link>
-          <Link
-            className="transition hover:text-white"
-            href="/concept/how-a-jet-engine-works"
-          >
-            Jet Engine
+          <Link className="transition hover:text-white" href={featuredConceptEntry.href}>
+            Featured
           </Link>
         </div>
       </Container>
